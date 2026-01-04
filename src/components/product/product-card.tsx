@@ -12,9 +12,9 @@ const blurDataURL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYE
 
 export function ProductCard({ product }: ProductCardProps) {
     return (
-        <div className="group relative flex flex-col cursor-pointer select-none active:scale-[0.98] transition-transform duration-100">
+        <div className="group relative flex flex-col cursor-pointer select-none active:scale-[0.98] transition-transform duration-300 hover:scale-[1.2]">
             {/* Product Image Container */}
-            <div className="product-image w-full transition-transform duration-300 hover:scale-[1.02]">
+            <div className="product-image w-full">
                 <div className="relative w-full aspect-square bg-[#f9fafb] overflow-hidden">
                     <Image
                         src={product.image}
