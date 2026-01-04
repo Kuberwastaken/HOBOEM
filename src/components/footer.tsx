@@ -19,7 +19,7 @@ export default function Footer() {
                 ))}
             </div>
             <div>
-                © YEEZY
+                © HOBOEM
             </div>
         </footer>
     );

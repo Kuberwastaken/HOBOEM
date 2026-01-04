@@ -5,29 +5,39 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/products";
 import { useCart } from "@/context/cart-context";
-import { X, ChevronLeft, ChevronRight, Plus, ArrowLeft } from "lucide-react";
+import { shouldShowSizeFilter, CATEGORY_DISPLAY_NAMES, GENDER_DISPLAY_NAMES } from "@/lib/filter-config";
+import { X, ChevronLeft, ChevronRight, Plus, ArrowLeft, ShoppingBag } from "lucide-react";
 
 interface ProductModalProps {
     product: Product;
     onClose: () => void;
 }
 
-// Sizes matching the minimalist "1, 2, 3" aesthetic from the mockup
-const SIZES = ["1", "2", "3"];
-
 export function ProductModal({ product, onClose }: ProductModalProps) {
     const { addItem } = useCart();
     const [viewState, setViewState] = useState<"VIEW" | "SELECT">("VIEW");
-    const [selectedSize, setSelectedSize] = useState<string>("");
+
+    // Determine if this product has sizes
+    const hasSizes = product.availableSizes && product.availableSizes.length > 0;
+    const sizes = product.availableSizes || [];
 
     const handleSelectSize = (size: string) => {
-        setSelectedSize(size);
         addItem(product, size);
         onClose();
     };
 
+    const handleAddWithoutSize = () => {
+        addItem(product, "ONE SIZE");
+        onClose();
+    };
+
     const toggleState = () => {
-        setViewState(viewState === "VIEW" ? "SELECT" : "VIEW");
+        if (hasSizes) {
+            setViewState(viewState === "VIEW" ? "SELECT" : "VIEW");
+        } else {
+            // No sizes - add directly
+            handleAddWithoutSize();
+        }
     };
 
     return (
@@ -54,7 +64,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                 exit={{ scale: 0.5, opacity: 0 }}
                 transition={{
                     duration: 0.4,
-                    ease: [0.32, 0.72, 0, 1], // iOS-like spring easing
+                    ease: [0.32, 0.72, 0, 1],
                 }}
                 className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-8"
             >
@@ -126,7 +136,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.3, delay: 0.15 }}
-                    className="w-full max-w-md flex flex-col items-center justify-end pb-12 min-h-[150px]"
+                    className="w-full max-w-md flex flex-col items-center justify-end pb-12 min-h-[180px]"
                 >
                     <AnimatePresence mode="wait">
                         {viewState === "VIEW" ? (
@@ -137,24 +147,50 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.25, ease: "easeOut" }}
-                                className="flex flex-col items-center gap-4"
+                                className="flex flex-col items-center gap-3"
                             >
+                                {/* Product Name */}
                                 <div className="text-center font-bold font-mono tracking-wider uppercase text-lg">
-                                    {product.name.split(' ').slice(0, 2).join(' ')}
+                                    {product.name}
                                 </div>
 
+                                {/* Category & Gender Badge */}
+                                <div className="flex items-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest">
+                                    <span>{CATEGORY_DISPLAY_NAMES[product.category]}</span>
+                                    {product.gender && (
+                                        <>
+                                            <span>•</span>
+                                            <span>{GENDER_DISPLAY_NAMES[product.gender]}</span>
+                                        </>
+                                    )}
+                                </div>
+
+                                {/* Price */}
                                 <div className="text-center font-mono text-sm">
                                     ${product.price}
                                 </div>
 
+                                {/* Add Button */}
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={toggleState}
                                     className="mt-4 p-2"
+                                    title={hasSizes ? "Select Size" : "Add to Cart"}
                                 >
-                                    <Plus className="w-6 h-6" />
+                                    {hasSizes ? (
+                                        <Plus className="w-6 h-6" />
+                                    ) : (
+                                        <ShoppingBag className="w-6 h-6" />
+                                    )}
                                 </motion.button>
+
+                                {/* Size availability hint */}
+                                {hasSizes && (
+                                    <div className="text-[10px] text-gray-400 uppercase tracking-widest">
+                                        {sizes.length} sizes available
+                                    </div>
+                                )}
                             </motion.div>
                         ) : (
                             /* SELECT SIZE STATE */
@@ -185,14 +221,14 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 </div>
 
                                 {/* Sizes */}
-                                <div className="flex items-center justify-center gap-12 md:gap-16 font-mono text-lg md:text-xl font-bold">
-                                    {SIZES.map((size) => (
+                                <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 font-mono text-sm md:text-base font-bold">
+                                    {sizes.map((size) => (
                                         <motion.button
                                             key={size}
-                                            whileHover={{ scale: 1.25 }}
+                                            whileHover={{ scale: 1.15 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => handleSelectSize(size)}
-                                            className="hover:opacity-50"
+                                            className="hover:opacity-50 min-w-[40px] h-10 flex items-center justify-center border border-gray-200 rounded-sm hover:border-black transition-colors"
                                         >
                                             {size}
                                         </motion.button>
@@ -200,7 +236,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 </div>
 
                                 <div className="mt-2 text-[10px] font-bold tracking-widest uppercase text-gray-400 hover:text-black cursor-pointer transition-colors">
-                                    Information
+                                    Size Guide
                                 </div>
                             </motion.div>
                         )}

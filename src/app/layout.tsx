@@ -15,8 +15,8 @@ const shareTechMono = Share_Tech_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "YZY",
-  description: "YEEZY",
+  title: "HOBOEM",
+  description: "HOBOEM",
 };
 
 import { CartProvider } from "@/context/cart-context";

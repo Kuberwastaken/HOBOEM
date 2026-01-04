@@ -15,7 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="group relative flex flex-col cursor-pointer select-none active:scale-[0.98] transition-transform duration-300 hover:scale-[1.05]">
             {/* Product Image Container */}
             <div className="product-image w-full">
-                <div className="relative w-full aspect-square bg-[#f9fafb] overflow-hidden">
+                <div className="relative w-full aspect-square bg-[#f9fafb] overflow-hidden rounded-sm">
                     <Image
                         src={product.image}
                         alt={product.name}
@@ -28,11 +28,12 @@ export function ProductCard({ product }: ProductCardProps) {
                 </div>
             </div>
 
-            {/* Product Info - Share Tech Mono font like header categories */}
-            <div className="mt-1 text-center">
-                <p className="text-xs md:text-sm font-[family-name:var(--font-share-tech)] uppercase text-black tracking-wide">
-                    {product.id.split('-').slice(0, 2).join('-')}
+            {/* Product Info - Minimalist: Just ID */}
+            <div className="mt-2 text-center">
+                <p className="text-[10px] md:text-xs font-[family-name:var(--font-share-tech)] uppercase text-black/60 tracking-wider truncate">
+                    {product.id}
                 </p>
+                {/* Price and Gender removed as per request */}
             </div>
         </div>
     );

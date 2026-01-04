@@ -27,7 +27,7 @@ export default function CheckoutPage() {
         >
             {/* Header / Top Bar - Absolute */}
             <div className="absolute top-0 right-0 p-6 z-[60] flex items-center gap-2 text-xs font-bold tracking-widest uppercase">
-                <span>YZY WALLET</span>
+                <span>HOBOEM WALLET</span>
                 <BagIcon className="w-4 h-4" />
                 <span>{itemCount}</span>
             </div>
