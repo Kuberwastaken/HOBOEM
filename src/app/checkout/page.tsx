@@ -108,8 +108,11 @@ export default function CheckoutPage() {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr] gap-4">
                             <div className="relative">
-                                <select className="w-full h-12 px-4 border border-gray-200 text-sm text-gray-300 focus:outline-none focus:border-black transition-colors uppercase font-mono appearance-none bg-transparent cursor-pointer">
-                                    <option value="" disabled selected>STATE</option>
+                                <select
+                                    defaultValue=""
+                                    className="w-full h-12 px-4 border border-gray-200 text-sm text-gray-300 focus:outline-none focus:border-black transition-colors uppercase font-mono appearance-none bg-transparent cursor-pointer"
+                                >
+                                    <option value="" disabled>STATE</option>
                                     <option>CA</option>
                                     <option>NY</option>
                                 </select>
