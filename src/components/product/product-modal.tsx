@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/products";
 import { useCart } from "@/context/cart-context";
-import { shouldShowSizeFilter, CATEGORY_DISPLAY_NAMES, GENDER_DISPLAY_NAMES } from "@/lib/filter-config";
+import { CATEGORY_DISPLAY_NAMES, GENDER_DISPLAY_NAMES } from "@/lib/filter-config";
 import { X, ChevronLeft, ChevronRight, Plus, ArrowLeft, ShoppingBag } from "lucide-react";
 
 interface ProductModalProps {
@@ -16,6 +16,19 @@ interface ProductModalProps {
 export function ProductModal({ product, onClose }: ProductModalProps) {
     const { addItem } = useCart();
     const [viewState, setViewState] = useState<"VIEW" | "SELECT">("VIEW");
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    // Image carousel logic
+    const images = product.images;
+    const hasMultipleImages = images.length > 1;
+
+    const goToPrevImage = () => {
+        setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    };
+
+    const goToNextImage = () => {
+        setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    };
 
     // Determine if this product has sizes
     const hasSizes = product.availableSizes && product.availableSizes.length > 0;
@@ -86,16 +99,17 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
 
                 {/* Image Section */}
                 <div className="relative flex-1 w-full max-w-4xl flex items-center justify-center mb-12">
-                    {/* Navigation Arrows */}
+                    {/* Navigation Arrows - Only show if multiple images */}
                     <AnimatePresence>
-                        {viewState === "VIEW" && (
+                        {viewState === "VIEW" && hasMultipleImages && (
                             <>
                                 <motion.button
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ delay: 0.2 }}
-                                    className="absolute left-0 md:left-4 p-4 hover:opacity-50 transition-opacity"
+                                    onClick={goToPrevImage}
+                                    className="absolute left-0 md:left-4 p-4 hover:opacity-50 transition-opacity z-10"
                                 >
                                     <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
                                 </motion.button>
@@ -104,7 +118,8 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ delay: 0.2 }}
-                                    className="absolute right-0 md:right-4 p-4 hover:opacity-50 transition-opacity"
+                                    onClick={goToNextImage}
+                                    className="absolute right-0 md:right-4 p-4 hover:opacity-50 transition-opacity z-10"
                                 >
                                     <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
                                 </motion.button>
@@ -120,14 +135,46 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                         }}
                         className="relative w-full max-w-md aspect-square"
                     >
-                        <Image
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            className="object-contain"
-                            unoptimized
-                        />
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={currentImageIndex}
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -50 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute inset-0"
+                            >
+                                <Image
+                                    src={images[currentImageIndex]}
+                                    alt={`${product.name} - Image ${currentImageIndex + 1}`}
+                                    fill
+                                    className="object-contain"
+                                    unoptimized
+                                />
+                            </motion.div>
+                        </AnimatePresence>
                     </motion.div>
+
+                    {/* Dot Indicators - Only show if multiple images */}
+                    {hasMultipleImages && viewState === "VIEW" && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-2"
+                        >
+                            {images.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setCurrentImageIndex(index)}
+                                    className={`w-2 h-2 rounded-full transition-colors ${index === currentImageIndex
+                                        ? "bg-black"
+                                        : "bg-gray-300 hover:bg-gray-400"
+                                        }`}
+                                />
+                            ))}
+                        </motion.div>
+                    )}
                 </div>
 
                 {/* Controls Section */}
@@ -140,57 +187,49 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                 >
                     <AnimatePresence mode="wait">
                         {viewState === "VIEW" ? (
-                            /* VIEW STATE */
+                            /* VIEW STATE - Clean minimal layout */
                             <motion.div
                                 key="view"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.25, ease: "easeOut" }}
-                                className="flex flex-col items-center gap-3"
+                                className="flex flex-col items-center gap-1"
                             >
                                 {/* Product Name */}
-                                <div className="text-center font-bold font-mono tracking-wider uppercase text-lg">
+                                <div className="text-center font-bold font-mono tracking-wider uppercase text-base md:text-lg">
                                     {product.name}
                                 </div>
 
-                                {/* Category & Gender Badge */}
-                                <div className="flex items-center gap-2 text-[10px] text-gray-400 uppercase tracking-widest">
-                                    <span>{CATEGORY_DISPLAY_NAMES[product.category]}</span>
-                                    {product.gender && (
-                                        <>
-                                            <span>•</span>
-                                            <span>{GENDER_DISPLAY_NAMES[product.gender]}</span>
-                                        </>
-                                    )}
-                                </div>
+                                {/* Description - Between name and price */}
+                                {product.description && (
+                                    <div className="mt-1 flex flex-col items-center text-[9px] md:text-[10px] font-mono uppercase tracking-wide text-center text-gray-400 leading-snug max-w-[280px] md:max-w-xs">
+                                        {product.description.split(';').slice(0, 4).map((line: string, idx: number) => (
+                                            <span key={idx}>{line.trim()}</span>
+                                        ))}
+                                        {product.description.split(';').length > 4 && (
+                                            <span className="text-gray-300">...</span>
+                                        )}
+                                    </div>
+                                )}
 
-                                {/* Price */}
-                                <div className="text-center font-mono text-sm">
-                                    ${product.price}
-                                </div>
+                                {/* Price - Bolder */}
+                                {product.price && (
+                                    <div className="text-center font-mono text-sm font-bold mt-2">
+                                        ${product.price}
+                                    </div>
+                                )}
 
                                 {/* Add Button */}
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={toggleState}
-                                    className="mt-4 p-2"
+                                    className="mt-3 p-2"
                                     title={hasSizes ? "Select Size" : "Add to Cart"}
                                 >
-                                    {hasSizes ? (
-                                        <Plus className="w-6 h-6" />
-                                    ) : (
-                                        <ShoppingBag className="w-6 h-6" />
-                                    )}
+                                    <Plus className="w-5 h-5 md:w-6 md:h-6" />
                                 </motion.button>
-
-                                {/* Size availability hint */}
-                                {hasSizes && (
-                                    <div className="text-[10px] text-gray-400 uppercase tracking-widest">
-                                        {sizes.length} sizes available
-                                    </div>
-                                )}
                             </motion.div>
                         ) : (
                             /* SELECT SIZE STATE */
@@ -216,9 +255,21 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     </motion.button>
                                 </div>
 
-                                <div className="font-mono text-sm font-bold">
-                                    ${product.price}
-                                </div>
+                                {/* Price */}
+                                {product.price && (
+                                    <div className="font-mono text-sm font-bold">
+                                        ${product.price}
+                                    </div>
+                                )}
+
+                                {/* Description - Yeezy style multi-line */}
+                                {product.description && (
+                                    <div className="flex flex-col items-center gap-0 text-[9px] md:text-[10px] font-mono uppercase tracking-wider text-center text-gray-500 max-w-xs">
+                                        {product.description.split(';').map((line: string, idx: number) => (
+                                            <span key={idx} className="leading-relaxed">{line.trim()}</span>
+                                        ))}
+                                    </div>
+                                )}
 
                                 {/* Sizes */}
                                 <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 font-mono text-sm md:text-base font-bold">

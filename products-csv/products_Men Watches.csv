@@ -1,0 +1,52 @@
+﻿id,category,gender,price,desc
+SDC-047,WATCHES,MEN,215,Black dial ; Black case ; Black strap ; Metal alloy case ; Stainless steel strap ; Quartz ; Metal link bracelet ; Fold-over clasp with safety lock
+SDC-048,WATCHES,MEN,215,Black dial ; Gold case ; Gold strap ; Metal alloy case ; Stainless steel strap ; Quartz ; Metal link bracelet ; Fold-over clasp with safety lock
+SDC-088,WATCHES,MEN,315,Silver dial ; Black case ; Green strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-089,WATCHES,MEN,315,White dial ; Black case ; Red strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-090,WATCHES,MEN,315,Grey dial ; Black case ; Grey strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-091,WATCHES,MEN,315,Grey dial ; Black case ; Black strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-092,WATCHES,MEN,315,Silver dial ; Black case ; Grey strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-093,WATCHES,MEN,315,Black dial ; Black case ; Blue strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-094,WATCHES,MEN,315,Grey dial ; Black case ; Black strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-095,WATCHES,MEN,315,Grey dial ; Black case ; Black strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-096,WATCHES,MEN,315,White dial ; Black case ; Grey strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-097,WATCHES,MEN,315,Grey dial ; Black case ; Black strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-098,WATCHES,MEN,315,Blue dial ; Black case ; Blue strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-099,WATCHES,MEN,315,Grey dial ; Black case ; Black strap ; Metal alloy case ; Silicone strap ; Quartz ; Strap with pin buckle
+SDC-102,WATCHES,MEN,315,Black dial ; Silver case ; Silver strap ; Metal alloy case ; Stainless steel strap ; Quartz ; Metal link bracelet ; Fold-over clasp
+SDC-111,WATCHES,MEN,315,White dial ; Rose gold case ; Brown strap ; Metal alloy case ; Leather strap ; Quartz ; Strap with pin buckle
+SDC-112,WATCHES,MEN,315,Blue dial ; Rose gold case ; Blue strap ; Metal alloy case ; Leather strap ; Quartz ; Strap with pin buckle
+SDC-113,WATCHES,MEN,315,Black dial ; Rose gold case ; Black strap ; Metal alloy case ; Leather strap ; Quartz ; Strap with pin buckle
+SDC-114,WATCHES,MEN,315,Black dial ; Silver case ; Black strap ; Metal alloy case ; Leather strap ; Quartz ; Strap with pin buckle
+SDC-116,WATCHES,MEN,315,Blue dial ; Silver case ; Tan strap ; Metal alloy case ; Leather strap ; Quartz ; Strap with pin buckle
+SDC-168,WATCHES,MEN,315,Black dial ; Black case ; Black strap ; Metal alloy case ; Stainless steel strap ; Quartz ; Metal link bracelet ; Fold-over clasp
+SDC-169,WATCHES,MEN,315,Black dial ; Black case with rose-gold bezel ; Black strap ; Metal alloy case ; Stainless steel strap ; Quartz movement ; Day & date display ; Fold-over clasp
+SDC-170,WATCHES,MEN,315,White dial ; Black case with rose-gold bezel ; Black strap ; Metal alloy case ; Stainless steel strap ; Quartz movement ; Day & date display ; Fold-over clasp
+SDC-171,WATCHES,MEN,315,Black & Rose Gold ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-172,WATCHES,MEN,315,Silver & Rose Gold ; Stainless Steel ; Quartz ; Two-Tone Metal Bracelet with Fold-Over Clasp
+SDC-173,WATCHES,MEN,315,Black & Rose Gold ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-174,WATCHES,MEN,315,Green & Silver & Rose Gold ; Stainless Steel ; Quartz ; Two-Tone Metal Bracelet with Fold-Over Clasp
+SDC-175,WATCHES,MEN,315,Green & White & Silver & Rose Gold ; Stainless Steel ; Quartz ; Two-Tone Metal Bracelet with Fold-Over Clasp
+SDC-176,WATCHES,MEN,315,Black & Blue ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-178,WATCHES,MEN,315,Black & Rose Gold ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-179,WATCHES,MEN,315,Black & Rose Gold ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-180,WATCHES,MEN,315,Black ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-181,WATCHES,MEN,315,Green & Black ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-182,WATCHES,MEN,315,Black & Rose Gold ; Stainless Steel ; Quartz ; Black Metal Bracelet with Fold-Over Clasp
+SDC-183,WATCHES,MEN,315,Silver & Black & White ; Stainless Steel ; Quartz ; Silver Metal Bracelet with Fold-Over Clasp
+SDC-184,WATCHES,MEN,315,Silver & Gold & Black & White ; Stainless Steel ; Quartz ; Two-Tone Metal Bracelet with Fold-Over Clasp
+SDC-185,WATCHES,MEN,315,Silver & Rose Gold & Black & White ; Stainless Steel ; Quartz ; Two-Tone Metal Bracelet with Fold-Over Clasp
+SDC-186,WATCHES,MEN,315,Gold & Black ; Stainless Steel ; Quartz ; Gold-Tone Metal Bracelet with Fold-Over Clasp
+SDC-187,WATCHES,MEN,315,Gold & Black ; Stainless Steel ; Quartz ; Gold-Tone Metal Bracelet with Fold-Over Clasp
+SDC-188,WATCHES,MEN,315,Silver & Rose Gold ; Stainless Steel ; Quartz ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-189,WATCHES,MEN,315,Silver & Black ; Stainless Steel ; Quartz ; Black Dial ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-190,WATCHES,MEN,315,Silver & White ; Stainless Steel ; Quartz ; White Textured Dial with Gold-Tone Markers ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-191,WATCHES,MEN,315,Silver & Black ; Stainless Steel ; Quartz ; Black Textured Dial with Gold-Tone Markers & Numerals ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-192,WATCHES,MEN,315,Silver ; Stainless Steel ; Quartz ; Silver Sunray Dial with Red Accents & Applied Numerals ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-193,WATCHES,MEN,315,Silver ; Stainless Steel ; Quartz ; Black Dial with Red Accents & Applied Numerals ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-194,WATCHES,MEN,315,Silver ; Stainless Steel ; Quartz ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-195,WATCHES,MEN,315,Black ; Stainless Steel ; Quartz ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-196,WATCHES,MEN,315,White ; Stainless Steel ; Quartz ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-197,WATCHES,MEN,315,Black ; Stainless Steel ; Quartz ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-203,WATCHES,MEN,315,Black ; Stainless Steel ; Quartz ; Silver-Tone Metal Bracelet with Fold-Over Clasp
+SDC-204,WATCHES,MEN,315,Silver / White ; Stainless Steel ; Quartz ; Silver-Tone Metal Bracelet with Fold-Over Clasp

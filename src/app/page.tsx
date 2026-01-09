@@ -9,6 +9,73 @@ import { ProductModal } from "@/components/product/product-modal";
 import { PRODUCTS, Product, filterProducts } from "@/lib/products";
 import { Category, Gender, Size } from "@/lib/filter-config";
 
+// Seeded random for consistent shuffling
+function seededShuffle<T>(array: T[], seed: number): T[] {
+    const result = [...array];
+    let currentSeed = seed;
+    const random = () => {
+        currentSeed = (currentSeed * 9301 + 49297) % 233280;
+        return currentSeed / 233280;
+    };
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+}
+
+// Create custom "ALL" view ordering
+function createAllViewOrder(products: Product[]): Product[] {
+    // Define the rotation order: category + optional gender filter
+    const rotationConfig = [
+        { category: "WATCHES" as Category, gender: "MEN" as Gender },
+        { category: "SUNGLASSES" as Category, gender: undefined },
+        { category: "WATCHES" as Category, gender: "WOMEN" as Gender },
+        { category: "WALLETS" as Category, gender: undefined },
+        { category: "WATCHES" as Category, gender: "KIDS" as Gender },
+        { category: "LINGERIE" as Category, gender: undefined },
+    ];
+
+    const groupSize = 6;
+    const result: Product[] = [];
+
+    // Group products by category+gender
+    const groups = rotationConfig.map(config => {
+        let filtered = products.filter(p => p.category === config.category);
+        if (config.gender) {
+            filtered = filtered.filter(p => p.gender === config.gender);
+        }
+        // Shuffle each group with a consistent seed
+        return seededShuffle(filtered, 12345);
+    });
+
+    // Track how many we've taken from each group
+    const indices = rotationConfig.map(() => 0);
+
+    // Keep rotating until all products are placed
+    let hasMore = true;
+    while (hasMore) {
+        hasMore = false;
+        for (let g = 0; g < groups.length; g++) {
+            const group = groups[g];
+            const startIdx = indices[g];
+            const chunk = group.slice(startIdx, startIdx + groupSize);
+            if (chunk.length > 0) {
+                result.push(...chunk);
+                indices[g] += chunk.length;
+                hasMore = true;
+            }
+        }
+    }
+
+    // Add any remaining products that weren't in the rotation (e.g., BELTS, BLAZERS, GIFT_SETS)
+    const usedIds = new Set(result.map(p => p.id));
+    const remaining = products.filter(p => !usedIds.has(p.id));
+    result.push(...remaining);
+
+    return result;
+}
+
 export default function Home() {
     // Multi-Select States
     const [selectedCategories, setSelectedCategories] = useState<Category[]>(["ALL"]);
@@ -20,12 +87,22 @@ export default function Home() {
 
     // Filter products based on all criteria
     const filteredProducts = useMemo(() => {
-        return filterProducts(
+        const filtered = filterProducts(
             PRODUCTS,
             selectedCategories,
             selectedGenders,
             selectedSizes
         );
+
+        // Apply custom ordering only for "ALL" view with no sub-filters
+        const isAllView = selectedCategories.includes("ALL") || selectedCategories.length === 0;
+        const noSubFilters = selectedGenders.length === 0 && selectedSizes.length === 0;
+
+        if (isAllView && noSubFilters) {
+            return createAllViewOrder(filtered);
+        }
+
+        return filtered;
     }, [selectedCategories, selectedGenders, selectedSizes]);
 
     // Calculate total products for the current category selection (ignoring sub-filters)
@@ -46,7 +123,7 @@ export default function Home() {
     const filterKey = `${selectedCategories.join(",")}-${selectedGenders.join(",") || "all"}-${selectedSizes.join(",") || "all"}`;
 
     return (
-        <div className="min-h-screen pb-20 bg-[#f9fafb] text-black font-mono">
+        <div className="min-h-screen pb-4 md:pb-8 bg-[#ffffff] text-black font-mono">
             <Header
                 selectedCategories={selectedCategories}
                 selectedGenders={selectedGenders}

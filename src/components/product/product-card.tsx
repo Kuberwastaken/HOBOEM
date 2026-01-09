@@ -15,9 +15,9 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="group relative flex flex-col cursor-pointer select-none active:scale-[0.98] transition-transform duration-300 hover:scale-[1.05]">
             {/* Product Image Container */}
             <div className="product-image w-full">
-                <div className="relative w-full aspect-square bg-[#f9fafb] overflow-hidden rounded-sm">
+                <div className="relative w-full aspect-square bg-[#ffffff] overflow-hidden rounded-sm">
                     <Image
-                        src={product.image}
+                        src={product.images[0]}
                         alt={product.name}
                         fill
                         className="object-contain p-1"

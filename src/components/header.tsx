@@ -152,7 +152,7 @@ export default function Header({
     const bottomRowCategories = CATEGORIES.slice(midPoint);
 
     return (
-        <header className="sticky top-0 z-50 bg-[#f9fafb]">
+        <header className="sticky top-0 z-50 bg-[#ffffff]">
             {/* 1. Navbar Top Row */}
             <div className="flex items-center justify-between px-3 py-5 relative max-w-[1920px] mx-auto w-full">
 
@@ -170,15 +170,15 @@ export default function Header({
                 </div>
 
                 {/* Categories - Desktop Only - Absolute Center */}
-                <div className="hidden md:flex flex-col items-center gap-1.5 absolute left-1/2 -translate-x-1/2 text-[10px] md:text-[11px] text-gray-400 font-[family-name:var(--font-share-tech)]">
-                    <div className="flex items-center gap-6 md:gap-8 justify-center">
+                <div className="hidden md:flex flex-col items-center gap-1 absolute left-1/2 -translate-x-1/2 text-[12px] md:text-[13px] text-gray-400 font-[family-name:var(--font-dm-sans)]">
+                    <div className="flex items-center gap-4 md:gap-5 justify-center">
                         {topRowCategories.map((cat) => (
                             <motion.button
                                 key={cat}
                                 onClick={() => handleDesktopCategoryChange(cat)}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`uppercase transition-colors tracking-widest flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
+                                className={`uppercase transition-colors tracking-wide flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
                                     }`}
                             >
                                 {isMultiSelectMode && <Checkbox checked={selectedCategories.includes(cat)} />}
@@ -186,14 +186,14 @@ export default function Header({
                             </motion.button>
                         ))}
                     </div>
-                    <div className="flex items-center gap-6 md:gap-8 justify-center">
+                    <div className="flex items-center gap-4 md:gap-5 justify-center">
                         {bottomRowCategories.map((cat) => (
                             <motion.button
                                 key={cat}
                                 onClick={() => handleDesktopCategoryChange(cat)}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className={`uppercase transition-colors tracking-widest flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
+                                className={`uppercase transition-colors tracking-wide flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
                                     }`}
                             >
                                 {isMultiSelectMode && <Checkbox checked={selectedCategories.includes(cat)} />}
@@ -214,7 +214,7 @@ export default function Header({
                                 : "bg-transparent text-black border-gray-300 hover:border-black"
                                 }`}
                         >
-                            <span>Filter</span>
+                            <span>Sort By</span>
                             {isFilterOpen ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
                         </button>
                     )}
@@ -257,7 +257,7 @@ export default function Header({
                                 {/* Mobile Multi-Select Toggle */}
                                 <button
                                     onClick={() => setIsMultiSelectMode(!isMultiSelectMode)}
-                                    className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-mono"
+                                    className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-[family-name:var(--font-dm-sans)]"
                                 >
                                     <div className={`w-3 h-3 border border-black flex items-center justify-center ${isMultiSelectMode ? "bg-black" : "bg-white"}`}>
                                     </div>
@@ -269,7 +269,7 @@ export default function Header({
                                     <button
                                         key={cat}
                                         onClick={() => handleTempCategoryChange(cat)}
-                                        className={`flex items-center justify-center p-4 text-xs font-mono uppercase tracking-widest transition-colors border-b border-r border-gray-200 rounded-none ${(index + 1) % 2 === 0 ? "border-r-0" : ""
+                                        className={`flex items-center justify-center p-4 text-xs font-[family-name:var(--font-dm-sans)] uppercase tracking-widest transition-colors border-b border-r border-gray-200 rounded-none ${(index + 1) % 2 === 0 ? "border-r-0" : ""
                                             } ${tempCategories.includes(cat) ? "bg-black text-white" : "text-black hover:bg-gray-50"
                                             }`}
                                     >
@@ -282,7 +282,7 @@ export default function Header({
                             {/* Filters Section */}
                             {(menuFilters.hasGender || menuFilters.hasSize) && (
                                 <div className="flex flex-col gap-6 pt-8 px-3 mt-4">
-                                    <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Filters</span>
+                                    <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold font-[family-name:var(--font-dm-sans)]">Sort</span>
 
                                     {/* Gender Filters */}
                                     {menuFilters.hasGender && (

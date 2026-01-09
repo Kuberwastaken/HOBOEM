@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Share_Tech_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Share_Tech_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -11,6 +11,12 @@ const ibmPlexMono = IBM_Plex_Mono({
 const shareTechMono = Share_Tech_Mono({
   variable: "--font-share-tech-mono",
   weight: ["400"],
+  subsets: ["latin"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -29,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${ibmPlexMono.variable} ${shareTechMono.variable} font-mono antialiased bg-white text-black`}
+        className={`${ibmPlexMono.variable} ${shareTechMono.variable} ${dmSans.variable} font-mono antialiased bg-white text-black`}
       >
         <CartProvider>{children}</CartProvider>
       </body>

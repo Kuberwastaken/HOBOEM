@@ -9,7 +9,7 @@ import { BagIcon } from "@/components/ui/icons";
 import { useCart } from "@/context/cart-context";
 
 export default function CheckoutPage() {
-    const { items, total, addItem, removeItem, updateQuantity } = useCart();
+    const { items, addItem, removeItem, updateQuantity } = useCart();
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [subscribe, setSubscribe] = useState(true);
@@ -165,9 +165,9 @@ export default function CheckoutPage() {
                             {items.map((item, idx) => (
                                 <div key={`${item.id}-${item.size}-${idx}`} className="flex gap-6">
                                     {/* Product Image */}
-                                    <div className="relative w-20 h-24 bg-[#f9fafb] flex-shrink-0">
+                                    <div className="relative w-20 h-24 bg-[#ffffff] flex-shrink-0">
                                         <Image
-                                            src={item.image}
+                                            src={item.images[0]}
                                             alt={item.name}
                                             fill
                                             className="object-contain p-2"
@@ -185,7 +185,6 @@ export default function CheckoutPage() {
                                                 <p className="font-bold text-sm uppercase leading-tight mb-1">{item.name}</p>
                                                 <p className="text-[10px] text-gray-500 uppercase tracking-wide">SIZE: {item.size}</p>
                                             </div>
-                                            <p className="font-bold text-sm text-right">${item.price}</p>
                                         </div>
 
                                         <div className="flex justify-between items-end mt-2">
@@ -219,29 +218,7 @@ export default function CheckoutPage() {
                         </div>
                     )}
 
-                    {/* Totals */}
-                    <div className="mt-12 pt-8 border-t border-dashed border-gray-200 space-y-3">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-500 uppercase tracking-wide text-xs">Subtotal</span>
-                            <span className="font-bold font-mono">${total.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-500 uppercase tracking-wide text-xs">Shipping</span>
-                            <span className="text-[10px] text-gray-400 uppercase tracking-widest">Calculated at next step</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-500 uppercase tracking-wide text-xs">Taxes</span>
-                            <span className="font-bold font-mono">$0.00</span>
-                        </div>
-                    </div>
 
-                    <div className="mt-8 pt-8 border-t border-black flex justify-between items-end">
-                        <span className="text-xl font-bold uppercase tracking-tight">Total</span>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-xs text-gray-400 uppercase mr-1">USD</span>
-                            <span className="text-2xl font-bold font-mono tracking-tighter">${total.toFixed(2)}</span>
-                        </div>
-                    </div>
 
                 </div>
             </div>

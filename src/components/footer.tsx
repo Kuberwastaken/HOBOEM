@@ -10,15 +10,20 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="py-12 px-4 md:px-8 flex flex-col items-center justify-center gap-8 text-[10px] md:text-xs text-black/60 font-mono tracking-widest">
-            <div className="flex flex-wrap justify-center gap-6 md:gap-12">
+        <footer className="py-4 md:py-8 px-3 md:px-8 flex flex-col md:flex-col items-center justify-center gap-2 md:gap-6 text-[9px] md:text-xs text-black/60 font-mono tracking-widest">
+            {/* Mobile: Single line with links only, no HOBOEM */}
+            {/* Desktop: Links row + HOBOEM row */}
+            <div className="flex flex-wrap justify-center gap-3 md:gap-12">
                 {links.map((link) => (
                     <Link key={link} href="#" className="hover:text-black">
                         {link}
                     </Link>
                 ))}
+                {/* Mobile: Add copyright inline */}
+                <span className="md:hidden">© HOBOEM</span>
             </div>
-            <div>
+            {/* Desktop only: Separate copyright line */}
+            <div className="hidden md:block">
                 © HOBOEM
             </div>
         </footer>
