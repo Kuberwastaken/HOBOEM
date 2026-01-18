@@ -10,7 +10,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="py-6 md:py-8 px-3 md:px-8 flex justify-center text-[9px] md:text-xs text-black/60 font-mono tracking-widest">
+        <footer className="py-3 md:py-4 px-3 md:px-8 flex justify-center text-[9px] md:text-xs text-black/60 font-mono tracking-widest">
             <div className="flex flex-wrap justify-center gap-3 md:gap-8">
                 {links.map((link) => (
                     <Link key={link.label} href={link.href} className="hover:text-black transition-colors">
