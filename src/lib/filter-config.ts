@@ -1,39 +1,17 @@
 // Filter Configuration for HOBOEM
 
-export type Category =
-    | "ALL"
-    | "WATCHES"
-    | "SUNGLASSES"
-    | "WALLETS"
-    | "BELTS"
-    | "BLAZERS"
-    | "LINGERIE"
-    | "GIFT_SETS";
+export type Category = "ALL" | "WATCHES" | "SUNGLASSES";
 
 export type Gender = "MEN" | "WOMEN" | "UNISEX" | "KIDS";
 
 export type Size = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "FREESIZE";
 
-export const CATEGORIES: Category[] = [
-    "ALL",
-    "WATCHES",
-    "SUNGLASSES",
-    "WALLETS",
-    "BELTS",
-    "BLAZERS",
-    "LINGERIE",
-    "GIFT_SETS",
-];
+export const CATEGORIES: Category[] = ["ALL", "WATCHES", "SUNGLASSES"];
 
 export const CATEGORY_DISPLAY_NAMES: Record<Category, string> = {
     ALL: "All",
     WATCHES: "Watches",
     SUNGLASSES: "Sunglasses",
-    WALLETS: "Wallets",
-    BELTS: "Belts",
-    BLAZERS: "Blazers",
-    LINGERIE: "Lingerie",
-    GIFT_SETS: "Gift Sets",
 };
 
 export const GENDERS: Gender[] = ["MEN", "WOMEN", "UNISEX", "KIDS"];
@@ -57,38 +35,15 @@ export interface CategoryFilterConfig {
 export const CATEGORY_FILTER_CONFIG: Record<Category, CategoryFilterConfig> = {
     ALL: {
         hasGender: true,
-        hasSize: true,
-        availableGenders: ["MEN", "WOMEN", "UNISEX", "KIDS"],
+        hasSize: false,
+        availableGenders: ["MEN", "WOMEN", "KIDS"],
     },
     WATCHES: {
         hasGender: true,
         hasSize: false,
-        availableGenders: ["MEN", "WOMEN", "UNISEX", "KIDS"],
+        availableGenders: ["MEN", "WOMEN", "KIDS"],
     },
     SUNGLASSES: {
-        hasGender: true,
-        hasSize: false,
-        availableGenders: ["MEN", "WOMEN", "UNISEX", "KIDS"],
-    },
-    WALLETS: {
-        hasGender: false,
-        hasSize: false,
-    },
-    BELTS: {
-        hasGender: true,
-        hasSize: false,
-        availableGenders: ["MEN", "WOMEN", "UNISEX"],
-    },
-    BLAZERS: {
-        hasGender: true,
-        hasSize: true,
-        availableGenders: ["MEN", "WOMEN", "UNISEX"],
-    },
-    LINGERIE: {
-        hasGender: false, // Update: No gender for Lingerie
-        hasSize: true,
-    },
-    GIFT_SETS: {
         hasGender: false,
         hasSize: false,
     },

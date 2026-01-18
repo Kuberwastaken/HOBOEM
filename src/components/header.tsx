@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/context/cart-context";
-import { BagIcon } from "@/components/ui/icons";
 import {
     Category,
     Gender,
@@ -146,11 +145,6 @@ export default function Header({
     const menuFilters = getDerivedFilters(tempCategories);
     const desktopFilters = getDerivedFilters(selectedCategories);
 
-    // Categories Slicing
-    const midPoint = Math.ceil(CATEGORIES.length / 2);
-    const topRowCategories = CATEGORIES.slice(0, midPoint);
-    const bottomRowCategories = CATEGORIES.slice(midPoint);
-
     return (
         <header className="sticky top-0 z-50 bg-[#ffffff]">
             {/* 1. Navbar Top Row */}
@@ -169,38 +163,21 @@ export default function Header({
                     </button>
                 </div>
 
-                {/* Categories - Desktop Only - Absolute Center */}
-                <div className="hidden md:flex flex-col items-center gap-1 absolute left-1/2 -translate-x-1/2 text-[12px] md:text-[13px] text-gray-400 font-[family-name:var(--font-dm-sans)]">
-                    <div className="flex items-center gap-4 md:gap-5 justify-center">
-                        {topRowCategories.map((cat) => (
-                            <motion.button
-                                key={cat}
-                                onClick={() => handleDesktopCategoryChange(cat)}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={`uppercase transition-colors tracking-wide flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
-                                    }`}
-                            >
-                                {isMultiSelectMode && <Checkbox checked={selectedCategories.includes(cat)} />}
-                                {CATEGORY_DISPLAY_NAMES[cat]}
-                            </motion.button>
-                        ))}
-                    </div>
-                    <div className="flex items-center gap-4 md:gap-5 justify-center">
-                        {bottomRowCategories.map((cat) => (
-                            <motion.button
-                                key={cat}
-                                onClick={() => handleDesktopCategoryChange(cat)}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={`uppercase transition-colors tracking-wide flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
-                                    }`}
-                            >
-                                {isMultiSelectMode && <Checkbox checked={selectedCategories.includes(cat)} />}
-                                {CATEGORY_DISPLAY_NAMES[cat]}
-                            </motion.button>
-                        ))}
-                    </div>
+                {/* Categories - Desktop Only - Absolute Center - Single Row */}
+                <div className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2 text-[12px] md:text-[13px] text-gray-400 font-[family-name:var(--font-dm-sans)]">
+                    {CATEGORIES.map((cat) => (
+                        <motion.button
+                            key={cat}
+                            onClick={() => handleDesktopCategoryChange(cat)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`uppercase transition-colors tracking-wide flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
+                                }`}
+                        >
+                            {isMultiSelectMode && <Checkbox checked={selectedCategories.includes(cat)} />}
+                            {CATEGORY_DISPLAY_NAMES[cat]}
+                        </motion.button>
+                    ))}
                 </div>
 
                 {/* Right Side Controls */}
@@ -230,12 +207,10 @@ export default function Header({
                     {/* Cart */}
                     <Link
                         href="/checkout"
-                        className="flex items-center gap-2 hover:opacity-50 transition-opacity group flex-shrink-0"
+                        className="flex items-center gap-1.5 hover:opacity-50 transition-opacity flex-shrink-0 text-xs md:text-sm font-bold tracking-wider uppercase"
                     >
-                        <span key={itemCount} className="text-xs md:text-sm font-mono">
-                            {itemCount}
-                        </span>
-                        <BagIcon className="w-5 h-5 transition-transform group-hover:scale-110" />
+                        <span>Cart</span>
+                        <span className="font-mono">({itemCount})</span>
                     </Link>
                 </div>
             </div>

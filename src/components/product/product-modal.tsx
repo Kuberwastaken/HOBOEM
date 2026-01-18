@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/products";
 import { useCart } from "@/context/cart-context";
 import { CATEGORY_DISPLAY_NAMES, GENDER_DISPLAY_NAMES } from "@/lib/filter-config";
-import { X, ChevronLeft, ChevronRight, Plus, ArrowLeft, ShoppingBag } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, ArrowLeft, ShoppingBag } from "lucide-react";
 
 interface ProductModalProps {
     product: Product;
@@ -17,6 +17,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     const { addItem } = useCart();
     const [viewState, setViewState] = useState<"VIEW" | "SELECT">("VIEW");
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isAdding, setIsAdding] = useState(false);
 
     // Image carousel logic
     const images = product.images;
@@ -35,20 +36,21 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     const sizes = product.availableSizes || [];
 
     const handleSelectSize = (size: string) => {
+        setIsAdding(true);
         addItem(product, size);
-        onClose();
+        setTimeout(() => onClose(), 400);
     };
 
     const handleAddWithoutSize = () => {
+        setIsAdding(true);
         addItem(product, "ONE SIZE");
-        onClose();
+        setTimeout(() => onClose(), 400);
     };
 
     const toggleState = () => {
         if (hasSizes) {
             setViewState(viewState === "VIEW" ? "SELECT" : "VIEW");
         } else {
-            // No sizes - add directly
             handleAddWithoutSize();
         }
     };
@@ -222,13 +224,16 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
 
                                 {/* Add Button */}
                                 <motion.button
-                                    whileHover={{ scale: 1.1 }}
+                                    whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={toggleState}
-                                    className="mt-3 p-2"
-                                    title={hasSizes ? "Select Size" : "Add to Cart"}
+                                    disabled={isAdding}
+                                    className={`mt-4 px-6 py-2 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase border-2 border-black transition-all ${isAdding ? "bg-black text-white" : "bg-transparent text-black hover:bg-black hover:text-white"
+                                        }`}
+                                    animate={isAdding ? { scale: [1, 1.1, 1] } : {}}
+                                    transition={{ duration: 0.3 }}
                                 >
-                                    <Plus className="w-5 h-5 md:w-6 md:h-6" />
+                                    {isAdding ? "Added ✓" : hasSizes ? "Select Size" : "Add"}
                                 </motion.button>
                             </motion.div>
                         ) : (
