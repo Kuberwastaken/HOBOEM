@@ -1,156 +1,150 @@
 import QRCode from "qrcode";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
 
-interface CartItemData {
+// Receipt ID generator
+export function generateReceiptId(): string {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let id = "";
+    for (let i = 0; i < 8; i++) {
+        id += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return id;
+}
+
+// Format price in INR
+export function formatPrice(amount: number): string {
+    return `₹${amount.toLocaleString("en-IN")}`;
+}
+
+// Cart item type for QR encoding
+export interface CartQRItem {
     id: string;
     size?: string;
     quantity: number;
+    note?: string;
 }
 
-// Generate a unique receipt ID based on timestamp
-export function generateReceiptId(): string {
-    const now = new Date();
-    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
-    const timeStr = now.getTime().toString(36).toUpperCase().slice(-4);
-    return `RCP-${dateStr}-${timeStr}`;
-}
-
-// Encode cart items into a compact base64 string
-export function encodeCartData(items: CartItemData[]): string {
-    const compact = items.map((item) => ({
+// Encode cart data to base64 (includes notes)
+export function encodeCartData(items: CartQRItem[]): string {
+    const data = items.map(item => ({
         i: item.id,
         s: item.size || "",
         q: item.quantity,
+        n: item.note || ""
     }));
-    const json = JSON.stringify(compact);
-    return btoa(json);
+    return btoa(JSON.stringify(data));
 }
 
-// Decode cart data from base64 string
-export function decodeCartData(encoded: string): CartItemData[] | null {
+// Decode cart data from base64
+export function decodeCartData(encoded: string): CartQRItem[] | null {
     try {
-        const json = atob(encoded);
-        const compact = JSON.parse(json) as Array<{ i: string; s: string; q: number }>;
-        return compact.map((item) => ({
+        const data = JSON.parse(atob(encoded));
+        return data.map((item: { i: string; s: string; q: number; n?: string }) => ({
             id: item.i,
             size: item.s || undefined,
             quantity: item.q,
+            note: item.n || ""
         }));
     } catch {
-        console.error("Failed to decode cart data");
         return null;
     }
 }
 
-// Generate QR code as data URL with encoded cart
-export async function generateQRCode(cartData: CartItemData[], siteUrl: string = "https://hoboem.com"): Promise<string> {
-    const encoded = encodeCartData(cartData);
-    const url = `${siteUrl}/cart?data=${encoded}`;
+// Generate QR code data URL - now includes notes!
+export async function generateQRCode(items: CartQRItem[]): Promise<string> {
+    const encoded = encodeCartData(items);
+    const url = `https://hoboem.com/cart?data=${encoded}`;
+    return QRCode.toDataURL(url, {
+        width: 200,
+        margin: 1,
+        color: { dark: "#000000", light: "#ffffff" }
+    });
+}
+
+// Generate cart restore URL (for WhatsApp sharing)
+export function generateCartUrl(items: CartQRItem[]): string {
+    const encoded = encodeCartData(items);
+    return `https://hoboem.com/cart?data=${encoded}`;
+}
+
+// Check if Web Share API is available
+export function canUseWebShare(): boolean {
+    return typeof navigator !== "undefined" && !!navigator.share && !!navigator.canShare;
+}
+
+// Share receipt via Web Share API
+export async function shareReceipt(blob: Blob, receiptId: string): Promise<boolean> {
+    if (!canUseWebShare()) return false;
 
     try {
-        return await QRCode.toDataURL(url, {
-            width: 120,
-            margin: 1,
-            color: {
-                dark: "#000000",
-                light: "#ffffff",
-            },
+        const file = new File([blob], `HOBOEM-${receiptId}.pdf`, { type: "application/pdf" });
+        if (!navigator.canShare({ files: [file] })) return false;
+
+        await navigator.share({
+            files: [file],
+            title: `HOBOEM Receipt ${receiptId}`,
+            text: `HOBOEM Order ${receiptId}`
         });
-    } catch (err) {
-        console.error("QR Code generation failed:", err);
-        throw err;
+        return true;
+    } catch {
+        return false;
     }
-}
-
-// Capture receipt element as PNG data URL
-export async function captureReceiptAsPNG(element: HTMLElement): Promise<string> {
-    const canvas = await html2canvas(element, {
-        backgroundColor: "#ffffff",
-        scale: 2, // High resolution
-        useCORS: true,
-        logging: false,
-    });
-    return canvas.toDataURL("image/png");
-}
-
-// Generate PDF from receipt element
-export async function generateReceiptPDF(element: HTMLElement, receiptId: string): Promise<Blob> {
-    const canvas = await html2canvas(element, {
-        backgroundColor: "#ffffff",
-        scale: 2,
-        useCORS: true,
-        logging: false,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const imgWidth = canvas.width;
-    const imgHeight = canvas.height;
-
-    // Calculate PDF dimensions (receipt-like proportions)
-    const pdfWidth = 80; // mm - receipt width
-    const pdfHeight = (imgHeight / imgWidth) * pdfWidth;
-
-    const pdf = new jsPDF({
-        orientation: pdfHeight > pdfWidth ? "portrait" : "landscape",
-        unit: "mm",
-        format: [pdfWidth, pdfHeight],
-    });
-
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-
-    return pdf.output("blob");
 }
 
 // Download blob as file
 export function downloadBlob(blob: Blob, filename: string): void {
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
 
 // Download data URL as file
 export function downloadDataURL(dataUrl: string, filename: string): void {
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
-// Check if Web Share API is available (mobile)
-export function canUseWebShare(): boolean {
-    return typeof navigator !== "undefined" && !!navigator.share && !!navigator.canShare;
+// Capture element as PNG
+export async function captureReceiptAsPNG(element: HTMLElement): Promise<string> {
+    const html2canvas = (await import("html2canvas")).default;
+    const canvas = await html2canvas(element, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        logging: false
+    });
+    return canvas.toDataURL("image/png");
 }
 
-// Share receipt via Web Share API (mobile)
-export async function shareReceipt(blob: Blob, receiptId: string): Promise<boolean> {
-    const file = new File([blob], `HOBOEM-${receiptId}.pdf`, { type: "application/pdf" });
+// Generate PDF from element
+export async function generateReceiptPDF(element: HTMLElement, receiptId: string): Promise<Blob> {
+    const html2canvas = (await import("html2canvas")).default;
+    const jsPDF = (await import("jspdf")).default;
 
-    if (!navigator.canShare?.({ files: [file] })) {
-        return false;
-    }
+    const canvas = await html2canvas(element, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        logging: false
+    });
 
-    try {
-        await navigator.share({
-            title: "HOBOEM Receipt",
-            text: `My HOBOEM order receipt: ${receiptId}`,
-            files: [file],
-        });
-        return true;
-    } catch (err) {
-        console.error("Share failed:", err);
-        return false;
-    }
-}
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+    });
 
-// Format price in INR
-export function formatPrice(price: number): string {
-    return `₹${price.toFixed(2)}`;
+    const imgWidth = 190;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+
+    return pdf.output("blob");
 }

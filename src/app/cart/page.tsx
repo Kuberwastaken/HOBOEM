@@ -2,17 +2,35 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useCart } from "@/context/cart-context";
 import { PRODUCTS } from "@/lib/products";
 import { decodeCartData } from "@/lib/receipt-generator";
-import { Loader2, CheckCircle, XCircle } from "lucide-react";
+
+type Status = "loading" | "success" | "error";
+
+const StatusDisplay = ({ status, message, itemCount }: { status: Status; message: string; itemCount: number }) => {
+    const icons = { loading: "⋯", success: "✓", error: "×" };
+    const colors = { loading: "text-black/60", success: "text-black", error: "text-black/40" };
+
+    return (
+        <div className="text-center">
+            <span className="text-8xl md:text-9xl font-black block mb-8 opacity-20">{icons[status]}</span>
+            <h1 className={`text-3xl md:text-5xl font-black uppercase tracking-tight ${colors[status]}`}>
+                {status === "loading" ? "Restoring" : status === "success" ? "Success" : "Failed"}
+            </h1>
+            <p className="text-black/40 text-sm uppercase tracking-widest mt-4">{message}</p>
+            {status === "success" && <p className="text-black/20 text-xs mt-6">Redirecting...</p>}
+        </div>
+    );
+};
 
 function CartRestoreContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { setItems } = useCart();
-    const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-    const [message, setMessage] = useState("Restoring your cart...");
+    const [status, setStatus] = useState<Status>("loading");
+    const [message, setMessage] = useState("Scanning receipt data...");
     const [itemCount, setItemCount] = useState(0);
 
     useEffect(() => {
@@ -26,114 +44,62 @@ function CartRestoreContent() {
 
         try {
             const decoded = decodeCartData(data);
+            if (!decoded?.length) throw new Error("Invalid data");
 
-            if (!decoded || decoded.length === 0) {
-                setStatus("error");
-                setMessage("Invalid cart data");
-                return;
-            }
+            const cartItems = decoded
+                .map(item => {
+                    const product = PRODUCTS.find(p => p.id === item.id);
+                    return product ? { ...product, quantity: item.quantity, size: item.size } : null;
+                })
+                .filter(Boolean);
 
-            // Convert decoded data to cart items
-            const cartItems = decoded.map((item) => {
-                const product = PRODUCTS.find((p) => p.id === item.id);
-                if (!product) return null;
-                return {
-                    ...product,
-                    quantity: item.quantity,
-                    size: item.size,
-                };
-            }).filter(Boolean);
+            if (!cartItems.length) throw new Error("Products not found");
 
-            if (cartItems.length === 0) {
-                setStatus("error");
-                setMessage("Products not found");
-                return;
-            }
-
-            // Set cart items
             setItems(cartItems as any);
             setItemCount(cartItems.length);
             setStatus("success");
-            setMessage(`Restored ${cartItems.length} item(s) to your cart!`);
-
-            // Redirect to checkout after delay
-            setTimeout(() => {
-                router.push("/checkout");
-            }, 2000);
+            setMessage(`${cartItems.length} item${cartItems.length > 1 ? "s" : ""} restored`);
+            setTimeout(() => router.push("/checkout"), 1500);
         } catch {
             setStatus("error");
-            setMessage("Failed to restore cart");
+            setMessage("Failed to decode cart");
         }
     }, [searchParams, setItems, router]);
 
     return (
-        <div className="text-center max-w-sm">
-            {/* Logo */}
-            <h1 className="text-3xl font-black tracking-[0.3em] mb-8">HOBOEM</h1>
+        <div className="min-h-screen bg-black text-white font-mono flex flex-col">
+            <nav className="px-6 py-6 flex justify-between text-[10px] uppercase tracking-[0.3em] text-white/40">
+                <Link href="/" className="hover:text-white transition-colors">HOBOEM</Link>
+                <span>Cart Restore</span>
+            </nav>
 
-            {/* Status Icon */}
-            <div className="mb-6">
-                {status === "loading" && (
-                    <Loader2 className="w-12 h-12 text-gray-400 mx-auto animate-spin" />
-                )}
-                {status === "success" && (
-                    <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
-                )}
-                {status === "error" && (
-                    <XCircle className="w-12 h-12 text-red-500 mx-auto" />
-                )}
+            <div className="flex-1 flex items-center justify-center px-6">
+                <StatusDisplay status={status} message={message} itemCount={itemCount} />
             </div>
 
-            {/* Message */}
-            <p className={`text-sm uppercase tracking-widest mb-4 ${status === "success" ? "text-green-600" :
-                    status === "error" ? "text-red-600" :
-                        "text-gray-500"
-                }`}>
-                {message}
-            </p>
-
-            {/* Actions */}
-            {status === "success" && (
-                <p className="text-xs text-gray-400">
-                    Redirecting to checkout...
-                </p>
-            )}
-
             {status === "error" && (
-                <div className="space-y-3">
-                    <button
-                        onClick={() => router.push("/")}
-                        className="bg-black text-white px-6 py-3 text-xs uppercase tracking-widest font-bold hover:bg-black/90 transition-colors"
-                    >
-                        Go to Shop
-                    </button>
-                    <p className="text-[10px] text-gray-400">
-                        The cart link may have expired or is invalid
-                    </p>
+                <div className="p-6 text-center">
+                    <Link href="/" className="inline-block bg-white text-black px-8 py-3 text-sm font-bold uppercase tracking-widest">
+                        Browse Shop
+                    </Link>
                 </div>
             )}
-        </div>
-    );
-}
 
-function LoadingFallback() {
-    return (
-        <div className="text-center max-w-sm">
-            <h1 className="text-3xl font-black tracking-[0.3em] mb-8">HOBOEM</h1>
-            <Loader2 className="w-12 h-12 text-gray-400 mx-auto animate-spin mb-6" />
-            <p className="text-sm uppercase tracking-widest text-gray-500">
-                Loading...
-            </p>
+            <div className="p-6 text-center text-[10px] uppercase tracking-[0.3em] text-white/20">
+                HOBOEM © 2026
+            </div>
         </div>
     );
 }
 
 export default function CartRestorePage() {
     return (
-        <div className="min-h-screen bg-white flex items-center justify-center p-4">
-            <Suspense fallback={<LoadingFallback />}>
-                <CartRestoreContent />
-            </Suspense>
-        </div>
+        <Suspense fallback={
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <div className="w-8 h-px bg-white/20 animate-pulse" />
+            </div>
+        }>
+            <CartRestoreContent />
+        </Suspense>
     );
 }
