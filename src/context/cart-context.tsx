@@ -17,6 +17,9 @@ interface CartContextType {
     setItems: (items: CartItem[]) => void;
 }
 
+// Minimum Order Quantity
+export const MOQ = 25;
+
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -47,11 +50,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             if (existing) {
                 return prev.map((i) =>
                     i.id === product.id && i.size === size
-                        ? { ...i, quantity: i.quantity + 1 }
+                        ? { ...i, quantity: i.quantity + MOQ }
                         : i
                 );
             }
-            return [...prev, { ...product, quantity: 1, size }];
+            return [...prev, { ...product, quantity: MOQ, size }];
         });
     };
 
@@ -63,7 +66,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setItems((prev) =>
             prev.map((i) => {
                 if (i.id === id && i.size === size) {
-                    const newQty = Math.max(0, i.quantity + delta);
+                    const newQty = Math.max(MOQ, i.quantity + delta);
                     return { ...i, quantity: newQty };
                 }
                 return i;

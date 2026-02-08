@@ -226,11 +226,24 @@ Restore cart: ${cartLink}`;
                                                     <h3 className="text-sm font-bold uppercase truncate">{item.name}</h3>
                                                     <p className="text-[10px] text-black/40">{item.size || "One Size"}</p>
                                                 </div>
-                                                <p className="text-sm font-black">{formatPrice((item.price || 0) * item.quantity)}</p>
+                                                <div className="text-right flex-shrink-0">
+                                                    <p className="text-sm md:text-base font-black">
+                                                        {item.price ? formatPrice((item.price || 0) * item.quantity) : "—"}
+                                                    </p>
+                                                    <p className="text-[10px] md:text-sm text-black/40 mt-1 whitespace-nowrap">
+                                                        {item.quantity} × {item.price ? formatPrice(item.price) : "—"}
+                                                    </p>
+                                                </div>
                                             </div>
                                             <div className="flex items-center mt-2">
-                                                <button onClick={() => updateQuantity(item.id, item.size, -1)} className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white">−</button>
-                                                <span className="w-8 h-8 flex items-center justify-center border-y border-black/20 text-sm font-bold">{item.quantity}</span>
+                                                <button
+                                                    onClick={() => updateQuantity(item.id, item.size, -1)}
+                                                    disabled={item.quantity <= 25}
+                                                    className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-current"
+                                                >
+                                                    −
+                                                </button>
+                                                <span className="w-8 h-8 flex items-center justify-center border-y border-black/20 text-sm font-bold min-w-[32px]">{item.quantity}</span>
                                                 <button onClick={() => updateQuantity(item.id, item.size, 1)} className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white">+</button>
                                                 <button onClick={() => removeItem(item.id, item.size)} className="w-8 h-8 flex items-center justify-center text-black/30 hover:text-red-500"><X className="w-4 h-4" /></button>
                                             </div>
@@ -252,9 +265,12 @@ Restore cart: ${cartLink}`;
                 {/* Summary & Generate */}
                 {items.length > 0 && (
                     <div className="mt-8 bg-white p-6">
-                        <div className="flex justify-between items-baseline mb-6">
-                            <span className="text-[10px] uppercase text-black/40">Total ({itemCount})</span>
-                            <span className="text-2xl font-black">{formatPrice(subtotal)}</span>
+                        <div className="flex flex-col items-end mb-6">
+                            <div className="flex justify-between items-baseline w-full">
+                                <span className="text-[10px] uppercase text-black/40">Total ({itemCount})</span>
+                                <span className="text-2xl font-black">{formatPrice(subtotal)}</span>
+                            </div>
+                            <span className="text-[10px] text-black/30 uppercase tracking-[0.2em] mt-1">+ GST + SHIPPING</span>
                         </div>
                         <button
                             onClick={() => setShowReceipt(true)}
@@ -308,9 +324,12 @@ Restore cart: ${cartLink}`;
                                                     <div className="flex justify-between items-start">
                                                         <div className="min-w-0">
                                                             <p className="text-base md:text-lg font-black uppercase truncate">{item.name}</p>
-                                                            <p className="text-sm text-black/50">{item.size || "One Size"} × {item.quantity}</p>
+                                                            <p className="text-sm text-black/50">{item.size || "One Size"}</p>
                                                         </div>
-                                                        <p className="text-lg md:text-xl font-black flex-shrink-0">{formatPrice((item.price || 0) * item.quantity)}</p>
+                                                        <div className="text-right">
+                                                            <p className="text-lg md:text-xl font-black">{formatPrice((item.price || 0) * item.quantity)}</p>
+                                                            <p className="text-sm text-black/40 mt-1 whitespace-nowrap">{item.quantity} × {item.price ? formatPrice(item.price) : "—"}</p>
+                                                        </div>
                                                     </div>
                                                     {note && <p className="text-sm text-black/40 italic mt-1">"{note}"</p>}
                                                 </div>
@@ -323,9 +342,12 @@ Restore cart: ${cartLink}`;
                                 <div className="border-t-4 border-black pt-6">
                                     <div className="flex justify-between items-baseline">
                                         <span className="text-lg font-black uppercase">Total</span>
-                                        <span className="text-3xl md:text-4xl font-black">{formatPrice(subtotal)}</span>
+                                        <div className="text-right">
+                                            <span className="text-3xl md:text-4xl font-black">{formatPrice(subtotal)}</span>
+                                            <p className="text-[10px] text-black/40 uppercase tracking-widest mt-1">+ GST + SHIPPING</p>
+                                        </div>
                                     </div>
-                                    <p className="text-sm text-black/40 text-right">{itemCount} unit{itemCount !== 1 ? "s" : ""}</p>
+                                    <p className="text-sm text-black/40 text-left mt-2">{itemCount} unit{itemCount !== 1 ? "s" : ""}</p>
                                 </div>
 
                                 {/* QR */}

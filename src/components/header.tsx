@@ -48,7 +48,7 @@ export default function Header({
     onLogoClick,
 }: HeaderProps) {
     const cart = useCart();
-    const itemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
+    const itemCount = cart?.items.length || 0;
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -207,10 +207,23 @@ export default function Header({
                     {/* Cart */}
                     <Link
                         href="/checkout"
-                        className="flex items-center gap-1.5 hover:opacity-50 transition-opacity flex-shrink-0 text-xs md:text-sm font-bold tracking-wider uppercase"
+                        className="flex items-center gap-1.5 hover:opacity-50 transition-opacity flex-shrink-0"
                     >
-                        <span>Cart</span>
-                        <span className="font-mono">({itemCount})</span>
+                        <span className="text-xs md:text-sm font-bold font-mono pt-0.5">{itemCount}</span>
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="w-4 h-4 md:w-5 md:h-5 pb-[1px]"
+                        >
+                            <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                            <rect x="4" y="10" width="16" height="12" rx="2.5" />
+                        </svg>
                     </Link>
                 </div>
             </div>

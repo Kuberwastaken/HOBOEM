@@ -136,7 +136,7 @@ export const ReceiptPreview = forwardRef<HTMLDivElement, ReceiptPreviewProps>(
                                             >
                                                 <Minus className="w-3 h-3" />
                                             </button>
-                                            <span className="text-xs font-bold w-4 text-center">{item.quantity}</span>
+                                            <span className="text-xs font-bold min-w-[24px] text-center">{item.quantity}</span>
                                             <button
                                                 onClick={() => updateQuantity(item.id, item.size, 1)}
                                                 className="w-5 h-5 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-sm transition-colors"
@@ -162,6 +162,9 @@ export const ReceiptPreview = forwardRef<HTMLDivElement, ReceiptPreviewProps>(
                                     <p className="text-[10px] md:text-xs font-bold">
                                         {item.price ? formatPrice(item.price * item.quantity) : "—"}
                                     </p>
+                                    <p className="text-[9px] md:text-[10px] text-gray-500 mt-0.5 whitespace-nowrap">
+                                        {item.quantity} × {item.price ? formatPrice(item.price) : "—"}
+                                    </p>
                                 </div>
                             </div>
                         ))}
@@ -173,6 +176,9 @@ export const ReceiptPreview = forwardRef<HTMLDivElement, ReceiptPreviewProps>(
                     <div className="flex justify-between items-center">
                         <span className="text-xs md:text-sm font-black uppercase tracking-wide">Total</span>
                         <span className="text-base md:text-lg font-black">{formatPrice(subtotal)}</span>
+                    </div>
+                    <div className="text-right mt-1">
+                        <span className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest">+ GST + SHIPPING</span>
                     </div>
                 </div>
 

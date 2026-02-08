@@ -25,6 +25,9 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
     const images = product.variants.map(v => v.image);
     const hasMultipleImages = images.length > 1;
 
+    // Get current variant based on image index
+    const currentVariant = product.variants[currentImageIndex];
+
     const goToPrevImage = () => {
         setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
     };
@@ -84,6 +87,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                     ease: [0.32, 0.72, 0, 1],
                 }}
                 className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-8"
+                onClick={onClose}
             >
                 {/* Back Button - Top Left (VIEW state only) */}
                 <AnimatePresence>
@@ -112,7 +116,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ delay: 0.2 }}
-                                    onClick={goToPrevImage}
+                                    onClick={(e) => { e.stopPropagation(); goToPrevImage(); }}
                                     className="absolute left-0 md:left-4 p-4 hover:opacity-50 transition-opacity z-10"
                                 >
                                     <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
@@ -122,7 +126,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ delay: 0.2 }}
-                                    onClick={goToNextImage}
+                                    onClick={(e) => { e.stopPropagation(); goToNextImage(); }}
                                     className="absolute right-0 md:right-4 p-4 hover:opacity-50 transition-opacity z-10"
                                 >
                                     <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
@@ -138,6 +142,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                             ease: [0.32, 0.72, 0, 1],
                         }}
                         className="relative w-full max-w-md aspect-square"
+                        onClick={(e) => e.stopPropagation()}
                     >
                         <AnimatePresence mode="wait">
                             <motion.div
@@ -166,6 +171,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                             className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-2"
+                            onClick={(e) => e.stopPropagation()}
                         >
                             {images.map((_, index) => (
                                 <button
@@ -188,6 +194,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.3, delay: 0.15 }}
                     className="w-full max-w-md flex flex-col items-center justify-end pb-12 min-h-[180px]"
+                    onClick={(e) => e.stopPropagation()}
                 >
                     <AnimatePresence mode="wait">
                         {viewState === "VIEW" ? (
@@ -206,21 +213,18 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 </div>
 
                                 {/* Description - Between name and price */}
-                                {product.description && (
-                                    <div className="mt-1 flex flex-col items-center text-[9px] md:text-[10px] font-mono uppercase tracking-wide text-center text-gray-400 leading-snug max-w-[280px] md:max-w-xs">
-                                        {product.description.split(';').slice(0, 4).map((line: string, idx: number) => (
-                                            <span key={idx}>{line.trim()}</span>
+                                {currentVariant?.description && (
+                                    <div className="mt-3 flex flex-col items-center gap-0 text-[10px] md:text-xs font-bold font-mono uppercase tracking-[0.2em] text-center text-black/40 w-full max-w-lg">
+                                        {currentVariant.description.split(';').map((line: string, idx: number) => (
+                                            <span key={idx} className="block leading-relaxed">{line.trim()}</span>
                                         ))}
-                                        {product.description.split(';').length > 4 && (
-                                            <span className="text-gray-300">...</span>
-                                        )}
                                     </div>
                                 )}
 
                                 {/* Price - Bolder */}
-                                {product.price && (
+                                {(currentVariant?.price ?? product.price) && (
                                     <div className="text-center font-mono text-sm font-bold mt-2">
-                                        {formatPrice(product.price)}
+                                        {formatPrice(currentVariant?.price ?? product.price ?? 0)}
                                     </div>
                                 )}
 
@@ -263,17 +267,17 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 </div>
 
                                 {/* Price */}
-                                {product.price && (
+                                {(currentVariant?.price ?? product.price) && (
                                     <div className="font-mono text-sm font-bold">
-                                        {formatPrice(product.price)}
+                                        {formatPrice(currentVariant?.price ?? product.price ?? 0)}
                                     </div>
                                 )}
 
                                 {/* Description - Yeezy style multi-line */}
-                                {product.description && (
-                                    <div className="flex flex-col items-center gap-0 text-[9px] md:text-[10px] font-mono uppercase tracking-wider text-center text-gray-500 max-w-xs">
-                                        {product.description.split(';').map((line: string, idx: number) => (
-                                            <span key={idx} className="leading-relaxed">{line.trim()}</span>
+                                {currentVariant?.description && (
+                                    <div className="flex flex-col items-center gap-0 text-[10px] md:text-xs font-bold font-mono uppercase tracking-[0.2em] text-center text-black/40 w-full max-w-lg">
+                                        {currentVariant.description.split(';').map((line: string, idx: number) => (
+                                            <span key={idx} className="block leading-relaxed">{line.trim()}</span>
                                         ))}
                                     </div>
                                 )}
