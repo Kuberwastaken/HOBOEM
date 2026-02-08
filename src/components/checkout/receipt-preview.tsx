@@ -3,13 +3,15 @@
 import React, { forwardRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Minus, X } from "lucide-react";
-import { generateReceiptId, generateQRCode, formatPrice } from "@/lib/receipt-generator";
+import { generateReceiptId, generateQRCode } from "@/lib/receipt-generator";
 import { useCart } from "@/context/cart-context";
+import { useCurrency } from "@/context/currency-context";
 
 interface CartItem {
     id: string;
     name: string;
     images: string[];
+    variants: { image: string }[];
     size?: string;
     quantity: number;
     price?: number;
@@ -23,6 +25,7 @@ interface ReceiptPreviewProps {
 export const ReceiptPreview = forwardRef<HTMLDivElement, ReceiptPreviewProps>(
     function ReceiptPreview({ items, interactive = false }, ref) {
         const { updateQuantity, removeItem } = useCart();
+        const { formatPrice } = useCurrency();
         const [receiptId] = useState(() => generateReceiptId());
         const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
         const [currentDate] = useState(() => {
@@ -108,7 +111,7 @@ export const ReceiptPreview = forwardRef<HTMLDivElement, ReceiptPreviewProps>(
                                 {/* Thumbnail */}
                                 <div className="relative w-10 h-10 md:w-12 md:h-12 bg-gray-50 flex-shrink-0">
                                     <Image
-                                        src={item.images[0]}
+                                        src={item.variants[0]?.image || ''}
                                         alt={item.name}
                                         fill
                                         className="object-contain p-1"

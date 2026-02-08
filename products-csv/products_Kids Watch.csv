@@ -1,9 +1,14 @@
-﻿id,category,gender,price,desc
-FW-25BK,WATCHES,KIDS,200,Black Metal Dial ; Sillicone Strap ; Round Analog ; Boys and Girls Watch 
-FW-25SL,WATCHES,KIDS,200,Silver Metal Dial ; Sillicone Strap ; Round Analog ; Boys and Girls Watch 
-FW-2133,WATCHES,KIDS,200,"Pink Plastic Dial ; Sillicone Strap, Round Analog ; Boys and Girls Watch"
-FW-2139,WATCHES,KIDS,200,"Black Plastic Dial ; Sillicone Strap, Round Analog ; Boys and Girls Watch"
-FW-2206,WATCHES,KIDS,200,"Blue Plastic Dial ; Sillicone Strap, Round Analog ; Boys and Girls Watch"
-FW-2217,WATCHES,KIDS,200,"Blue Plastic Dial ; Sillicone Strap, Round Analog ; Boys and Girls Watch"
-FW-2226,WATCHES,KIDS,200,"Black Plastic Dial ; Sillicone Strap, Round Analog ; Boys and Girls Watch"
-FW-9002,WATCHES,KIDS,200,"Orange Plastic Dial ; Sillicone Strap, Round Analog ; Boys and Girls Watch"
+id,imageSku,category,gender,price,desc
+25BK5,25BK5,WATCHES,KIDS,265,Alloy Case ; Silccon Band ; 3D Pattern ; Time Teacher Watch ; Black
+25BK6,25BK6,WATCHES,KIDS,265,Alloy Case ; Silccon Band ; 3D Pattern ; Time Teacher Watch ; Black
+25SL4,25SL4,WATCHES,KIDS,265,Alloy Case ; Silccon Band ; 3D Pattern ; Time Teacher Watch ; Silver
+25SL5,25SL5,WATCHES,KIDS,265,Alloy Case ; Silccon Band ; 3D Pattern ; Time Teacher Watch ; Silver
+25SL6,25SL6,WATCHES,KIDS,265,Alloy Case ; Silccon Band ; 3D Pattern ; Time Teacher Watch ; Silver
+F25BK,F25BK,WATCHES,KIDS,265,Alloy Case ; Silccon Band ; 3D Pattern ; Time Teacher Watch ; Silver
+F25SL,F25SL,WATCHES,KIDS,265,Alloy Case ; Silccon Band ; 3D Pattern ; Time Teacher Watch ; Silver
+F2133,F2133,WATCHES,KIDS,295,Alloy Case ; Silccon Band ; Designer Dial ; IP Plating ; Silver
+F2139,F2139,WATCHES,KIDS,295,Alloy Case ; Silccon Band ; Designer Dial ; IP Plating ; Silver
+F2206,F2206,WATCHES,KIDS,285,Alloy Case ; Silccon Band ; Digital ; IP Plating ; Silver
+F2217,F2217,WATCHES,KIDS,285,Alloy Case ; Silccon Band ; Designer Dial ; IP Plating ; Silver
+F2226,F2226,WATCHES,KIDS,310,Alloy Case ; Silccon Band ; Designer Dial ; IP Plating ; Silver
+F9002,F9002,WATCHES,KIDS,285,Alloy Case ; Silccon Band ; Designer Dial ; IP Plating ; Silver

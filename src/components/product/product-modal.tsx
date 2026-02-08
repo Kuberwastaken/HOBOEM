@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/products";
 import { useCart } from "@/context/cart-context";
+import { useCurrency } from "@/context/currency-context";
 import { CATEGORY_DISPLAY_NAMES, GENDER_DISPLAY_NAMES } from "@/lib/filter-config";
 import { X, ChevronLeft, ChevronRight, ArrowLeft, ShoppingBag } from "lucide-react";
 
@@ -15,12 +16,13 @@ interface ProductModalProps {
 
 export function ProductModal({ product, onClose }: ProductModalProps) {
     const { addItem } = useCart();
+    const { formatPrice } = useCurrency();
     const [viewState, setViewState] = useState<"VIEW" | "SELECT">("VIEW");
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isAdding, setIsAdding] = useState(false);
 
-    // Image carousel logic
-    const images = product.images;
+    // Image carousel logic - get images from variants
+    const images = product.variants.map(v => v.image);
     const hasMultipleImages = images.length > 1;
 
     const goToPrevImage = () => {
@@ -218,7 +220,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 {/* Price - Bolder */}
                                 {product.price && (
                                     <div className="text-center font-mono text-sm font-bold mt-2">
-                                        ${product.price}
+                                        {formatPrice(product.price)}
                                     </div>
                                 )}
 
@@ -263,7 +265,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 {/* Price */}
                                 {product.price && (
                                     <div className="font-mono text-sm font-bold">
-                                        ${product.price}
+                                        {formatPrice(product.price)}
                                     </div>
                                 )}
 

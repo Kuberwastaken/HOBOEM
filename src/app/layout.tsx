@@ -106,6 +106,7 @@ export const metadata: Metadata = {
 };
 
 import { CartProvider } from "@/context/cart-context";
+import { CurrencyProvider } from "@/context/currency-context";
 
 export default function RootLayout({
   children,
@@ -123,7 +124,9 @@ export default function RootLayout({
       <body
         className={`${ibmPlexMono.variable} ${shareTechMono.variable} ${dmSans.variable} font-mono antialiased bg-white text-black`}
       >
-        <CartProvider>{children}</CartProvider>
+        <CurrencyProvider>
+          <CartProvider>{children}</CartProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

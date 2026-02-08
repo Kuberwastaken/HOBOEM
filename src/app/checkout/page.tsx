@@ -14,14 +14,15 @@ import {
     generateReceiptPDF,
     downloadBlob,
     downloadDataURL,
-    formatPrice,
     decodeCartData,
     CartQRItem,
 } from "@/lib/receipt-generator";
+import { useCurrency } from "@/context/currency-context";
 import { PRODUCTS } from "@/lib/products";
 
 export default function CheckoutPage() {
     const { items, updateQuantity, removeItem, clearCart, setItems } = useCart();
+    const { formatPrice } = useCurrency();
     const receiptRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -217,7 +218,7 @@ Restore cart: ${cartLink}`;
                                 return (
                                     <motion.div key={key} layout className="bg-white p-4 flex gap-4">
                                         <div className="relative w-16 h-16 bg-[#f5f5f0] flex-shrink-0">
-                                            <Image src={item.images[0]} alt={item.name} fill className="object-contain p-1" sizes="64px" />
+                                            <Image src={item.variants[0]?.image || ''} alt={item.name} fill className="object-contain p-1" sizes="64px" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between gap-2">
@@ -301,7 +302,7 @@ Restore cart: ${cartLink}`;
                                         return (
                                             <div key={key} className="flex gap-4 items-start">
                                                 <div className="relative w-14 h-14 md:w-16 md:h-16 bg-[#f5f5f0] flex-shrink-0 border border-black/10">
-                                                    <Image src={item.images[0]} alt={item.name} fill className="object-contain p-1" sizes="64px" />
+                                                    <Image src={item.variants[0]?.image || ''} alt={item.name} fill className="object-contain p-1" sizes="64px" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex justify-between items-start">

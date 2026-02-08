@@ -17,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="product-image w-full">
                 <div className="relative w-full aspect-square bg-[#ffffff] overflow-hidden rounded-sm">
                     <Image
-                        src={product.images[0]}
+                        src={product.variants[0]?.image || ''}
                         alt={product.name}
                         fill
                         className="object-contain p-1"

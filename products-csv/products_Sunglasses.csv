@@ -1,13 +1,14 @@
-﻿id,category,gender,price,desc
-FL-0935,SUNGLASSES,UNISEX,120,Black Lens ; Square Sunglass ; Plastic Frame ; Free Size
-FL-1001,SUNGLASSES,UNISEX,120,Black Lens ; Square Sunglass ; Plastic Frame ; Free Size
-FL-6087,SUNGLASSES,UNISEX,120,Brown Lens ; Rectangular Sunglass ; Plastic Frame ; Free Size
-FL-8121,SUNGLASSES,UNISEX,120,Brown Lens ; Oval Sunglass ; Plastic Frame ; Free Size
-FL11910,SUNGLASSES,UNISEX,120,Black Lens ; Oval Sunglass ; Plastic Frame ; Free Size
-FL22908,SUNGLASSES,UNISEX,120,Brown Lens ; Square Sunglass ; Plastic Frame ; Free Size
-FL23012,SUNGLASSES,UNISEX,120,Grey Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size
-FL86744,SUNGLASSES,UNISEX,120,Brown Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size
-FL86984,SUNGLASSES,UNISEX,120,Brown Lens ; Oversized Sunglass ; Plastic Frame ; Free Size
-FL87017,SUNGLASSES,UNISEX,120,Brown Lens ; Oval Sunglass ; Plastic Frame ; Free Size
-FL240703,SUNGLASSES,UNISEX,120,Grey Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size
-FLB1024,SUNGLASSES,UNISEX,120,Grey Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size
+id,imageSku,category,gender,price,desc
+06AVIBK,06AVIBK,SUNGLASSES,UNISEX,120,Grey Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size
+8282001,8282001,SUNGLASSES,UNISEX,120,Sunglass ; Plastic Frame ; Free Size
+FL008121,FL008121,SUNGLASSES,UNISEX,120,Brown Lens ; Oval Sunglass ; Plastic Frame ; Free Size
+FL06087,FL06087,SUNGLASSES,UNISEX,120,Brown Lens ; Rectangular Sunglass ; Plastic Frame ; Free Size
+FL100103,FL100103,SUNGLASSES,UNISEX,120,Black Lens ; Square Sunglass ; Plastic Frame ; Free Size
+FL22908,FL22908,SUNGLASSES,UNISEX,120,Brown Lens ; Square Sunglass ; Plastic Frame ; Free Size
+FL23012,FL23012,SUNGLASSES,UNISEX,120,Grey Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size
+FL8212-6,FL8212-6,SUNGLASSES,UNISEX,120,Black Lens ; Oval Sunglass ; Plastic Frame ; Free Size
+FL86744,FL86744,SUNGLASSES,UNISEX,120,Brown Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size
+FL86984,FL86984,SUNGLASSES,UNISEX,120,Brown Lens ; Oversized Sunglass ; Plastic Frame ; Free Size
+FL87017,FL87017,SUNGLASSES,UNISEX,120,Brown Lens ; Oval Sunglass ; Plastic Frame ; Free Size
+FL935DC,FL935DC,SUNGLASSES,UNISEX,120,Black Lens ; Square Sunglass ; Plastic Frame ; Free Size
+FLB1024,FLB1024,SUNGLASSES,UNISEX,120,Grey Lens ; Retro-Square Sunglass ; Plastic Frame ; Free Size

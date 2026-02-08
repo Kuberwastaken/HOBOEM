@@ -1,8 +1,10 @@
 /**
- * Product Generation Script v3
+ * Product Generation Script v5
  * 
- * Reads product folders from products-assets/ with support for nested brand folders
- * Copies images to public/products/ and generates products.ts
+ * Each folder in products-assets = ONE product
+ * Each image in that folder = a variant of that product
+ * 
+ * CSV provides metadata (price, description) keyed by imageSku (folder name)
  * 
  * Usage: node scripts/generate-products.js
  * Or: npm run generate-products
@@ -12,91 +14,147 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
+const CSV_DIR = path.join(__dirname, '..', 'products-csv');
 const ASSETS_DIR = path.join(__dirname, '..', 'products-assets');
 const PUBLIC_DIR = path.join(__dirname, '..', 'public', 'products');
 const OUTPUT_PATH = path.join(__dirname, '..', 'src', 'lib', 'products.ts');
 
 // Asset folder configuration
-// Each entry: { folder: 'path', category: 'CATEGORY', gender: 'GENDER' (optional) }
+// Each entry scans for product folders and assigns category/gender
 const ASSET_CONFIG = [
-    // Sunglasses - flat structure
-    { folder: 'Sunglasses', category: 'SUNGLASSES', gender: 'UNISEX' },
-
+    // Sunglasses
+    { basePath: 'Sunglasses', category: 'SUNGLASSES', gender: 'UNISEX' },
+    
     // Men's Watches - nested by brand
-    { folder: 'Men Watches Images/M&H Watches', category: 'WATCHES', gender: 'MEN' },
-    { folder: 'Men Watches Images/Roadster Watches', category: 'WATCHES', gender: 'MEN' },
-    { folder: 'Men Watches Images/Wrogn Watch Image', category: 'WATCHES', gender: 'MEN' },
-
+    { basePath: 'Men Watches Images/M&H Watches', category: 'WATCHES', gender: 'MEN' },
+    { basePath: 'Men Watches Images/Roadster Watches', category: 'WATCHES', gender: 'MEN' },
+    { basePath: 'Men Watches Images/Wrogn Watch Image', category: 'WATCHES', gender: 'MEN' },
+    
     // Women's Watches - nested by brand
-    { folder: 'Women Watch Images/Dressberry Luxe Women Watches', category: 'WATCHES', gender: 'WOMEN' },
-    { folder: 'Women Watch Images/Dressberry Single Watch', category: 'WATCHES', gender: 'WOMEN' },
-    { folder: 'Women Watch Images/Killer Watches', category: 'WATCHES', gender: 'WOMEN' },
-    { folder: 'Women Watch Images/Lavie Women Watches', category: 'WATCHES', gender: 'WOMEN' },
-    { folder: 'Women Watch Images/M&H Watches', category: 'WATCHES', gender: 'WOMEN' },
-    { folder: 'Women Watch Images/Provogue Watches', category: 'WATCHES', gender: 'WOMEN' },
-
+    { basePath: 'Women Watch Images/Dressberry Luxe Women Watches', category: 'WATCHES', gender: 'WOMEN' },
+    { basePath: 'Women Watch Images/Dressberry Single Watch', category: 'WATCHES', gender: 'WOMEN' },
+    { basePath: 'Women Watch Images/Killer Watches', category: 'WATCHES', gender: 'WOMEN' },
+    { basePath: 'Women Watch Images/Lavie Women Watches', category: 'WATCHES', gender: 'WOMEN' },
+    { basePath: 'Women Watch Images/M&H Watches', category: 'WATCHES', gender: 'WOMEN' },
+    { basePath: 'Women Watch Images/Provogue Watches', category: 'WATCHES', gender: 'WOMEN' },
+    
     // Kids Watches
-    { folder: 'Kids Watches/Kids Watches', category: 'WATCHES', gender: 'KIDS' },
+    { basePath: 'Kids Watches', category: 'WATCHES', gender: 'KIDS' },
 ];
 
-// Valid values
-const VALID_CATEGORIES = ['WATCHES', 'SUNGLASSES'];
-const VALID_GENDERS = ['MEN', 'WOMEN', 'UNISEX', 'KIDS'];
+// CSV files for metadata lookup (keyed by imageSku)
+const CSV_FILES = [
+    'products_Sunglasses.csv',
+    'products_Men Watches.csv',
+    'products_Women Watch.csv',
+    'products_Kids Watch.csv',
+];
 
-// Find all product folders in a directory (non-recursive, just immediate children)
-function findProductFolders(basePath) {
-    if (!fs.existsSync(basePath)) {
-        console.log(`   ⚠️ Path not found: ${basePath}`);
-        return [];
+// Parse all CSVs and build a metadata lookup by imageSku
+function loadMetadata() {
+    const metadata = new Map();
+    
+    for (const csvFile of CSV_FILES) {
+        const csvPath = path.join(CSV_DIR, csvFile);
+        if (!fs.existsSync(csvPath)) continue;
+        
+        const content = fs.readFileSync(csvPath, 'utf-8');
+        const lines = content.split('\n').filter(l => l.trim());
+        if (lines.length < 2) continue;
+        
+        const headers = parseCSVLine(lines[0]);
+        const imageSkuIdx = headers.indexOf('imageSku');
+        const priceIdx = headers.indexOf('price');
+        const descIdx = headers.indexOf('desc');
+        
+        for (let i = 1; i < lines.length; i++) {
+            const values = parseCSVLine(lines[i]);
+            const imageSku = imageSkuIdx >= 0 ? values[imageSkuIdx] : values[0];
+            
+            if (imageSku && !metadata.has(imageSku)) {
+                metadata.set(imageSku, {
+                    price: priceIdx >= 0 ? parseFloat(values[priceIdx]) || undefined : undefined,
+                    description: descIdx >= 0 ? values[descIdx] : undefined,
+                });
+            }
+        }
     }
+    
+    return metadata;
+}
 
-    return fs.readdirSync(basePath)
+// Parse CSV line handling quotes
+function parseCSVLine(line) {
+    const values = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    values.push(current.trim());
+    return values;
+}
+
+// Find all product folders in a path
+function findProductFolders(basePath) {
+    const fullPath = path.join(ASSETS_DIR, basePath);
+    if (!fs.existsSync(fullPath)) return [];
+    
+    return fs.readdirSync(fullPath)
         .filter(name => {
-            const fullPath = path.join(basePath, name);
-            return fs.statSync(fullPath).isDirectory();
+            const itemPath = path.join(fullPath, name);
+            return fs.statSync(itemPath).isDirectory();
         })
         .map(name => ({
             id: name,
-            path: path.join(basePath, name)
+            path: path.join(fullPath, name)
         }));
 }
 
-// Find images in a product folder
-function findProductImages(productPath) {
+// Find all images (variants) in a product folder
+function findVariantImages(productPath) {
     if (!fs.existsSync(productPath)) return [];
-
+    
     return fs.readdirSync(productPath)
         .filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f))
         .sort()
-        .map(f => path.join(productPath, f));
+        .map(f => ({
+            filename: f,
+            variantId: path.parse(f).name,  // filename without extension = variant ID
+            fullPath: path.join(productPath, f)
+        }));
 }
 
-// Copy images to public folder and return web paths
-function copyImagesToPublic(productId, imagePaths) {
-    // Clean product ID for filesystem (replace special chars)
+// Copy images to public and return web paths
+function copyImagesToPublic(productId, variants) {
     const cleanId = productId.replace(/[^a-zA-Z0-9-_]/g, '-');
     const destDir = path.join(PUBLIC_DIR, cleanId);
-
+    
     if (!fs.existsSync(destDir)) {
         fs.mkdirSync(destDir, { recursive: true });
     }
-
-    const webPaths = [];
-
-    for (const srcPath of imagePaths) {
-        const filename = path.basename(srcPath);
-        const destPath = path.join(destDir, filename);
-
-        fs.copyFileSync(srcPath, destPath);
-        webPaths.push(`/products/${cleanId}/${filename}`);
-    }
-
-    return webPaths;
+    
+    return variants.map(v => {
+        const destPath = path.join(destDir, v.filename);
+        fs.copyFileSync(v.fullPath, destPath);
+        return {
+            variantId: v.variantId,
+            image: `/products/${cleanId}/${v.filename}`
+        };
+    });
 }
 
-// Generate a display name from product ID
+// Generate display name from ID
 function generateProductName(id) {
-    // Clean up the ID to create a readable name
     return id
         .replace(/[-_]/g, ' ')
         .replace(/([a-z])([A-Z])/g, '$1 $2')
@@ -106,91 +164,114 @@ function generateProductName(id) {
 
 // Main
 function generateProducts() {
-    console.log('📖 Starting product generation v3...\n');
-
-    // Clear and recreate public products directory
+    console.log('📖 Starting product generation v5 (folder = product, images = variants)...\n');
+    
+    // Clear public products directory
     if (fs.existsSync(PUBLIC_DIR)) {
         fs.rmSync(PUBLIC_DIR, { recursive: true });
     }
     fs.mkdirSync(PUBLIC_DIR, { recursive: true });
-
-    const products = [];
-    let totalImages = 0;
-
+    
+    // Load metadata from CSVs
+    const metadata = loadMetadata();
+    console.log(`📋 Loaded metadata for ${metadata.size} product IDs\n`);
+    
+    const allProducts = [];
+    let totalVariants = 0;
+    
     for (const config of ASSET_CONFIG) {
-        const basePath = path.join(ASSETS_DIR, config.folder);
-        console.log(`📁 Processing: ${config.folder}`);
-
-        const productFolders = findProductFolders(basePath);
-
+        console.log(`📁 Scanning: ${config.basePath}`);
+        
+        const productFolders = findProductFolders(config.basePath);
+        
         if (productFolders.length === 0) {
             console.log(`   ⚠️ No product folders found\n`);
             continue;
         }
-
+        
         for (const { id, path: productPath } of productFolders) {
-            const imagePaths = findProductImages(productPath);
-
-            if (imagePaths.length === 0) {
+            const variants = findVariantImages(productPath);
+            
+            if (variants.length === 0) {
                 console.log(`   ⚠️ ${id}: No images found`);
                 continue;
             }
-
-            const webPaths = copyImagesToPublic(id, imagePaths);
-            totalImages += webPaths.length;
-
+            
+            const variantData = copyImagesToPublic(id, variants);
+            totalVariants += variantData.length;
+            
+            // Get metadata if available
+            const meta = metadata.get(id) || {};
+            
             const product = {
-                id: id,
+                id,
                 name: generateProductName(id),
-                images: webPaths,
                 category: config.category,
+                gender: config.gender,
+                price: meta.price,
+                description: meta.description,
+                variants: variantData,
             };
-
-            if (config.gender && VALID_GENDERS.includes(config.gender)) {
-                product.gender = config.gender;
-            }
-
-            products.push(product);
-            console.log(`   ✅ ${id}: ${webPaths.length} image(s)`);
+            
+            allProducts.push(product);
+            console.log(`   ✅ ${id}: ${variantData.length} variant(s)`);
         }
-
+        
         console.log('');
     }
-
-    // Generate output TypeScript file
-    const productStrings = products.map(p => {
+    
+    // Generate TypeScript output
+    const productStrings = allProducts.map(p => {
         let str = '    {\n';
         str += `        id: "${p.id}",\n`;
         str += `        name: "${p.name}",\n`;
-        str += `        images: ${JSON.stringify(p.images)},\n`;
         str += `        category: "${p.category}" as Category,\n`;
-        if (p.gender) {
-            str += `        gender: "${p.gender}" as Gender,\n`;
+        str += `        gender: "${p.gender}" as Gender,\n`;
+        if (p.price !== undefined) {
+            str += `        price: ${p.price},\n`;
         }
+        if (p.description) {
+            str += `        description: ${JSON.stringify(p.description)},\n`;
+        }
+        str += `        variants: [\n`;
+        for (const v of p.variants) {
+            str += `            { variantId: "${v.variantId}", image: "${v.image}" },\n`;
+        }
+        str += `        ],\n`;
         str += '    }';
         return str;
     }).join(',\n');
-
+    
     const output = `// AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
 // Generated by scripts/generate-products.js
 // Run: npm run generate-products
 
 import { Category, Gender, Size } from "./filter-config";
 
+export interface ProductVariant {
+    variantId: string;
+    image: string;
+}
+
 export interface Product {
     id: string;
     name: string;
-    images: string[];
     category: Category;
-    gender?: Gender;
-    availableSizes?: Size[];
+    gender: Gender;
     price?: number;
     description?: string;
+    variants: ProductVariant[];
+    availableSizes?: Size[];
 }
 
 export const PRODUCTS: Product[] = [
 ${productStrings}
 ];
+
+// Helper: get all images for a product
+export function getProductImages(product: Product): string[] {
+    return product.variants.map(v => v.image);
+}
 
 // Filter products by criteria
 export function filterProducts(
@@ -220,10 +301,10 @@ export function filterProducts(
     });
 }
 `;
-
+    
     fs.writeFileSync(OUTPUT_PATH, output);
     console.log(`✨ Generated ${OUTPUT_PATH}`);
-    console.log(`   ${products.length} products, ${totalImages} images copied to public/products/`);
+    console.log(`   ${allProducts.length} products, ${totalVariants} total variants`);
 }
 
 generateProducts();

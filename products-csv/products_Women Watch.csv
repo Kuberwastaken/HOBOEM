@@ -1,10 +1,92 @@
-﻿id,category,gender,price,desc
-LV-701,WATCHES,WOMEN,250,Rose Gold ; Analog / Fashion Watch ; Metal alloy ; Stainless steel mesh ; Adjustable sliding clasp
-LV-702,WATCHES,WOMEN,250,Rose Gold ; Analog / Fashion Watch ; Metal alloy with rose-gold finish ; Stainless steel link bracelet ; Quartz
-LV-703,WATCHES,WOMEN,250,Rose Gold ; Analog / Fashion Watch ; Metal alloy with rose-gold finish ; Stainless steel link bracelet ; Quartz
-LV-704,WATCHES,WOMEN,250,Royal Blue ; Analog / Fashion Watch ; Metal alloy with rose-gold finish ; Battery-operated ; Fold-over clasp with safety
-LV-705,WATCHES,WOMEN,250,Black ; Analog / Fashion Watch ; Metal alloy with rose-gold finish ; Battery-operated ; Fold-over clasp with safety
-LV-706,WATCHES,WOMEN,250,Teal Blue ; Metal alloy with rose-gold finish ; Stainless steel patterned link bracelet ; Battery-operated ; Fold-over clasp with safety lock
-LV-707,WATCHES,WOMEN,250,Royal Blue ; Metal alloy with rose-gold finish ; Stainless steel link bracelet ; Battery-operated ; Fold-over clasp with safety lock
-LV-708,WATCHES,WOMEN,250,Royal Blue ; Metal alloy with rose-gold finish ; Stainless steel link bracelet with black coating ; Quartz ; Fold-over clasp with safety lock
-LV-709,WATCHES,WOMEN,250,Black ; Metal alloy with rose-gold plating ; Stainless steel link bracelet ; Battery operated ; Fold-over clasp with safety
+id,imageSku,category,gender,price,desc
+X0RJT,X0RJT,WATCHES,WOMEN,275,Alloy Case ; Alloy Chain ; Plastic Chip ; swarovski Stone ; Rose Gold
+X0601,X0601,WATCHES,WOMEN,690,Brass Case ; Brass Chain ; Sqaure Shape ; Butterfly Lock ; Rose Gold
+X0602,X0602,WATCHES,WOMEN,675,Brass Case ; Brass Chain ; Shaped Case ; Butterfly Lock ; Rose Gold
+X0603,X0603,WATCHES,WOMEN,690,Brass Case ; Brass Chain ; Sqaure Shape ; Butterfly Lock ; Two Tone RG
+X0604,X0604,WATCHES,WOMEN,550,Brass Case ; Brass Chain ; Octagon Shape ; Butterfly Lock ; Rose Gold
+X0605,X0605,WATCHES,WOMEN,590,Brass Case ; Brass Chain ; Sqaure Shape ; Butterfly Lock ; Rose Gold
+X0609,X0609,WATCHES,WOMEN,530,Brass Case ; Brass Chain ; Round shape ; Dummy Multi Dial ; Rose Gold
+X0610,X0610,WATCHES,WOMEN,470,Brass Case ; Brass Chain ; Round shape ; RG Designer Dial ; Rose Gold
+X0611,X0611,WATCHES,WOMEN,430,Brass Case ; Shaffer Chain ; Stainlees Sttel ; Classic Dial ; Rose Gold
+X0612,X0612,WATCHES,WOMEN,495,Brass Case ; Brass Chain ; Hollow Chain ; Lobor Lock ; Rose Gold
+X0613,X0613,WATCHES,WOMEN,260,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; IPS
+X0614,X0614,WATCHES,WOMEN,590,Brass Case ; Brass Chain ; Round shape ; IP Plating ; Two Tone RG
+X0615,X0615,WATCHES,WOMEN,480,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; Rose Gold
+KL001,KL001,WATCHES,WOMEN,280,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Black
+KL110,KL110,WATCHES,WOMEN,275,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+KL109,KL109,WATCHES,WOMEN,250,Alloy Case ; Leather Band ; Genuine Leather ; RG Buckle ; Rose Gold
+KL115,KL115,WATCHES,WOMEN,250,Alloy Case ; Leather Band ; Genuine Leather ; RG Buckle ; Rose Gold
+KL119,KL119,WATCHES,WOMEN,250,Alloy Case ; Leather Band ; Genuine Leather ; RG Buckle ; Rose Gold
+L0701,L0701,WATCHES,WOMEN,465,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+L0702,L0702,WATCHES,WOMEN,570,Brass Case ; Brass Chain ; Sqaure Shape ; Butterfly Lock ; Rose Gold
+L0703,L0703,WATCHES,WOMEN,570,Brass Case ; Brass Chain ; Sqaure Shape ; Butterfly Lock ; Rose Gold
+L0704,L0704,WATCHES,WOMEN,560,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; Rose Gold
+L0705,L0705,WATCHES,WOMEN,575,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; Rose Gold
+L0706,L0706,WATCHES,WOMEN,600,Brass Case ; Brass Chain ; IP Plating ; Butterfly Lock ; Rose Gold
+L0707,L0707,WATCHES,WOMEN,550,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; Rose Gold
+L0709,L0709,WATCHES,WOMEN,560,Brass Case ; Brass Chain ; Octagon Shape ; Butterfly Lock ; Rose Gold
+M224L,M224L,WATCHES,WOMEN,275,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+M231L,M231L,WATCHES,WOMEN,280,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Black
+M244L,M244L,WATCHES,WOMEN,310,Alloy Case ; SS Chain ; Round shape ; IP Plating ; IPS
+P0102,P0102,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Round shape ; Lobor Lock ; Rose Gold
+P0105,P0105,WATCHES,WOMEN,230,Alloy Case ; Brass Chain ; Round shape ; Lobor Lock ; IPS
+P0108,P0108,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Round shape ; Lobor Lock ; Rose Gold
+P0109,P0109,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Round shape ; Lobor Lock ; Rose Gold
+P0116,P0116,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Round shape ; Lobor Lock ; Rose Gold
+P0118,P0118,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Round shape ; Lobor Lock ; Rose Gold
+P0121,P0121,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Round shape ; Lobor Lock ; Rose Gold
+D0A07,D0A07,WATCHES,WOMEN,490,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; Rose Gold
+D120L,D120L,WATCHES,WOMEN,520,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; Rose Gold
+D1921,D1921,WATCHES,WOMEN,430,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+D2494,D2494,WATCHES,WOMEN,460,Alloy Case ; Alloy Chain ; Dial Rose Gold ; IP Plating ; Black
+D2503,D2503,WATCHES,WOMEN,495,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Two Tone RG
+D2566,D2566,WATCHES,WOMEN,545,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+DB000,DB000,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB001,DB001,WATCHES,WOMEN,240,Alloy Case ; Leather Band ; Genuine Leather ; IP Plating ; Rose Gold
+DB01R,DB01R,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB002,DB002,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB003,DB003,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB004,DB004,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB005,DB005,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB006,DB006,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB007,DB007,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB008,DB008,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB009,DB009,WATCHES,WOMEN,250,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB103,DB103,WATCHES,WOMEN,275,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+DB105,DB105,WATCHES,WOMEN,445,Brass Case ; Brass Chain ; Round shape ; IP Plating ; IPS
+DB107,DB107,WATCHES,WOMEN,490,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; IPS
+DB109,DB109,WATCHES,WOMEN,260,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; gold
+DB110,DB110,WATCHES,WOMEN,445,Brass Case ; Brass Chain ; Round shape ; IP Plating ; Black
+DB112,DB112,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB113,DB113,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB114,DB114,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB115,DB115,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB116,DB116,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB117,DB117,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB119,DB119,WATCHES,WOMEN,100,Alloy Case ; SS Chain ; Round shape ; Butterfly Lock ; Rose Gold
+DB123,DB123,WATCHES,WOMEN,275,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+DB131,DB131,WATCHES,WOMEN,275,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+DB135,DB135,WATCHES,WOMEN,485,Brass Case ; Brass Chain ; Round shape ; IP Plating ; Rose Gold
+DB191,DB191,WATCHES,WOMEN,385,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; IPS
+DB194,DB194,WATCHES,WOMEN,385,Brass Case ; Brass Chain ; Designer Dial ; IP Plating ; IPS
+DB200,DB200,WATCHES,WOMEN,255,Alloy Case ; Leather Band ; Genuine Leather ; IP Plating ; Rose Gold
+DB204,DB204,WATCHES,WOMEN,255,Alloy Case ; Leather Band ; Genuine Leather ; IP Plating ; Rose Gold
+DB207,DB207,WATCHES,WOMEN,410,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; IPS
+DB210,DB210,WATCHES,WOMEN,430,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Gold
+DB216,DB216,WATCHES,WOMEN,490,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+DB221,DB221,WATCHES,WOMEN,410,Alloy Case ; SS Chain ; Round shape ; IP Plating ; IPS
+DB227,DB227,WATCHES,WOMEN,430,Brass Case ; SS Chain ; Round shape ; IP Plating ; Gold
+DB231,DB231,WATCHES,WOMEN,460,Brass Case ; SS Chain ; Round shape ; IP Plating ; Rose Gold
+DB234,DB234,WATCHES,WOMEN,460,Brass Case ; SS Chain ; Round shape ; IP Plating ; Rose Gold
+DB243,DB243,WATCHES,WOMEN,390,Brass Case ; SS Chain ; Round shape ; IP Plating ; IPS
+DB273,DB273,WATCHES,WOMEN,360,Alloy Case ; Alloy Chain ; Round shape ; IP Plating ; Rose Gold
+DB276,DB276,WATCHES,WOMEN,360,Alloy Case ; Alloy Chain ; Round shape ; IP Plating ; Rose Gold
+DB277,DB277,WATCHES,WOMEN,440,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+DB281,DB281,WATCHES,WOMEN,330,Alloy Case ; Leather Band ; Genuine Leather ; IP Plating ; Rose Gold
+DB287,DB287,WATCHES,WOMEN,340,Brass Case ; Leather Band ; Genuine Leather ; IP Plating ; Rose Gold
+DB292,DB292,WATCHES,WOMEN,280,Alloy Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Black
+DB297,DB297,WATCHES,WOMEN,380,Brass Case ; Leather Band ; Genuine Leather ; IP Plating ; Rose Gold
+DB321,DB321,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB325,DB325,WATCHES,WOMEN,210,Alloy Case ; Alloy Chain ; Designer Dial ; IP Plating ; Rose Gold
+DB501,DB501,WATCHES,WOMEN,430,Brass Case ; SS Chain ; Shaffer Pattern ; IP Plating ; Rose Gold
+DBS21,DBS21,WATCHES,WOMEN,450,Brass Case ; SS Chain ; Designer Dial ; IP Plating ; Rose Gold
