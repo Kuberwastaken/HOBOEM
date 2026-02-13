@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# block oversized legacy archives
+legacy/newer-stuff-extracted/Men Watches Images.zip
+legacy/newer-stuff-extracted/Women Watch Images.zip
