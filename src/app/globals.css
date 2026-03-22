@@ -69,3 +69,21 @@ body {
     transform: translateY(0);
   }
 }
+
+@keyframes bannerProgress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@layer utilities {
+  .animate-banner-progress {
+    animation-name: bannerProgress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+}

@@ -1,0 +1,16 @@
+<svg width="2000" height="800" viewBox="0 0 2000 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="2000" height="800" fill="#E9E3D8"/>
+  <rect x="1180" y="0" width="820" height="800" fill="#111111" fill-opacity="0.06"/>
+  <rect x="94" y="94" width="1812" height="612" stroke="#111111" stroke-opacity="0.12"/>
+  <rect x="132" y="132" width="736" height="536" fill="#111111"/>
+  <rect x="916" y="138" width="840" height="180" fill="#F5F0E6"/>
+  <rect x="916" y="346" width="840" height="322" fill="#D3CCBE"/>
+  <text x="182" y="230" fill="#F5F0E6" fill-opacity="0.58" font-family="IBM Plex Mono, monospace" font-size="24" letter-spacing="7">ROTATION / 03</text>
+  <text x="182" y="414" fill="#F5F0E6" font-family="IBM Plex Mono, monospace" font-size="146" font-weight="700" letter-spacing="-8">INDEX</text>
+  <text x="182" y="540" fill="#F5F0E6" font-family="IBM Plex Mono, monospace" font-size="146" font-weight="700" letter-spacing="-8">ROOM</text>
+  <text x="972" y="254" fill="#111111" font-family="IBM Plex Mono, monospace" font-size="44" letter-spacing="9">QUIET SYSTEMS / ORDER / SURFACE</text>
+  <text x="972" y="474" fill="#111111" font-family="IBM Plex Mono, monospace" font-size="118" font-weight="700" letter-spacing="-6">TEMP BANNER</text>
+  <text x="972" y="552" fill="#111111" fill-opacity="0.56" font-family="IBM Plex Mono, monospace" font-size="28" letter-spacing="8">DROP NEW JPG / PNG / WEBP / SVG FILES INTO /PUBLIC/BANNERS</text>
+  <circle cx="1672" cy="574" r="74" fill="#111111" fill-opacity="0.08"/>
+  <circle cx="1672" cy="574" r="36" fill="#111111"/>
+</svg>

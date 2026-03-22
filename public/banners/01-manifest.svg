@@ -1,0 +1,15 @@
+<svg width="2000" height="800" viewBox="0 0 2000 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="2000" height="800" fill="#D8D3C7"/>
+  <rect x="64" y="64" width="1872" height="672" stroke="#111111" stroke-opacity="0.12"/>
+  <rect x="96" y="520" width="520" height="176" fill="#111111" fill-opacity="0.94"/>
+  <rect x="640" y="118" width="1240" height="2" fill="#111111" fill-opacity="0.18"/>
+  <rect x="640" y="192" width="860" height="2" fill="#111111" fill-opacity="0.16"/>
+  <rect x="640" y="266" width="1080" height="2" fill="#111111" fill-opacity="0.12"/>
+  <text x="96" y="130" fill="#111111" fill-opacity="0.55" font-family="IBM Plex Mono, monospace" font-size="26" letter-spacing="8">DROP FILE / 01</text>
+  <text x="92" y="382" fill="#111111" font-family="IBM Plex Mono, monospace" font-size="182" font-weight="700" letter-spacing="-9">MANIFEST</text>
+  <text x="136" y="598" fill="#F5F1E8" font-family="IBM Plex Mono, monospace" font-size="32" letter-spacing="9">UTILITY OBJECTS / QUIET LUXURY / SPRING GRID</text>
+  <text x="136" y="648" fill="#F5F1E8" fill-opacity="0.72" font-family="IBM Plex Mono, monospace" font-size="24" letter-spacing="5">TEMPORARY BANNER ASSET</text>
+  <circle cx="1726" cy="594" r="126" stroke="#111111" stroke-opacity="0.18" stroke-width="2"/>
+  <circle cx="1726" cy="594" r="82" stroke="#111111" stroke-opacity="0.12" stroke-width="2"/>
+  <rect x="1600" y="468" width="252" height="252" fill="#111111" fill-opacity="0.05"/>
+</svg>
