@@ -7,12 +7,24 @@ import Footer from "@/components/footer";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductModal } from "@/components/product/product-modal";
 import { BannerCarousel } from "@/components/home/banner-carousel";
-import { PRODUCTS, Product, filterProducts } from "@/lib/products";
-import { Category, Gender, Size } from "@/lib/filter-config";
+import { PRODUCTS, Product, filterProducts, flattenProducts } from "@/lib/products";
+import {
+    Category,
+    Gender,
+    Size,
+    CATEGORY_DISPLAY_NAMES,
+    getCategorySubcategoryById,
+    ProductSort,
+} from "@/lib/filter-config";
 
 interface BannerImage {
     src: string;
     alt: string;
+}
+
+interface BannerImageSet {
+    desktop: BannerImage[];
+    mobile: BannerImage[];
 }
 
 function seededShuffle<T>(array: T[], seed: number): T[] {
@@ -36,9 +48,10 @@ function createAllViewOrder(products: Product[]): Product[] {
         { category: "WATCHES" as Category, gender: "MEN" as Gender },
         { category: "SUNGLASSES" as Category, gender: undefined },
         { category: "WATCHES" as Category, gender: "WOMEN" as Gender },
-        { category: "WALLETS" as Category, gender: undefined },
+        { category: "LEATHER" as Category, gender: undefined },
         { category: "WATCHES" as Category, gender: "KIDS" as Gender },
         { category: "LINGERIE" as Category, gender: undefined },
+        { category: "GIFT_SET" as Category, gender: undefined },
     ];
 
     const groupSize = 6;
@@ -76,16 +89,38 @@ function createAllViewOrder(products: Product[]): Product[] {
     return result;
 }
 
-export function HomePage({ bannerImages }: { bannerImages: BannerImage[] }) {
+function getProductPrice(product: Product) {
+    return product.price ?? product.variants.find((variant) => variant.price !== undefined)?.price ?? Number.POSITIVE_INFINITY;
+}
+
+function sortProducts(products: Product[], sortOrder: ProductSort) {
+    if (sortOrder === "FEATURED") {
+        return products;
+    }
+
+    return [...products].sort((left, right) => {
+        const leftPrice = getProductPrice(left);
+        const rightPrice = getProductPrice(right);
+
+        return sortOrder === "PRICE_ASC"
+            ? leftPrice - rightPrice
+            : rightPrice - leftPrice;
+    });
+}
+
+export function HomePage({ bannerImages }: { bannerImages: BannerImageSet | BannerImage[] }) {
     const [selectedCategories, setSelectedCategories] = useState<Category[]>(["ALL"]);
     const [selectedGenders, setSelectedGenders] = useState<Gender[]>([]);
-    const [selectedSizes, setSelectedSizes] = useState<Size[]>([]);
+    const [selectedSizes] = useState<Size[]>([]);
+    const [selectedSubcategoryId, setSelectedSubcategoryId] = useState<string | null>(null);
+    const [sortOrder, setSortOrder] = useState<ProductSort>("FEATURED");
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [gridMode, setGridMode] = useState<"compact" | "expanded">("compact");
 
     const filteredProducts = useMemo(() => {
-        const filtered = filterProducts(
-            PRODUCTS,
+        const flat = flattenProducts(PRODUCTS);
+        let filtered = filterProducts(
+            flat,
             selectedCategories,
             selectedGenders,
             selectedSizes,
@@ -94,16 +129,16 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImage[] }) {
         const isAllView = selectedCategories.includes("ALL") || selectedCategories.length === 0;
         const noSubFilters = selectedGenders.length === 0 && selectedSizes.length === 0;
 
-        if (isAllView && noSubFilters) {
-            return createAllViewOrder(filtered);
+        if (sortOrder === "FEATURED" && isAllView && noSubFilters) {
+            filtered = createAllViewOrder(filtered);
         }
 
-        return filtered;
-    }, [selectedCategories, selectedGenders, selectedSizes]);
+        return sortProducts(filtered, sortOrder);
+    }, [selectedCategories, selectedGenders, selectedSizes, sortOrder]);
 
     const totalCategoryCount = useMemo(() => {
         return filterProducts(
-            PRODUCTS,
+            flattenProducts(PRODUCTS),
             selectedCategories,
             undefined,
             undefined,
@@ -114,23 +149,44 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImage[] }) {
         setGridMode((currentMode) => currentMode === "compact" ? "expanded" : "compact");
     };
 
-    const filterKey = `${selectedCategories.join(",")}-${selectedGenders.join(",") || "all"}-${selectedSizes.join(",") || "all"}`;
+    const filterKey = `${selectedCategories.join(",")}-${selectedGenders.join(",") || "all"}-${selectedSizes.join(",") || "all"}-${selectedSubcategoryId || "none"}-${sortOrder}`;
+    const singleCategorySelection = selectedCategories.length === 1 && selectedCategories[0] !== "ALL"
+        ? selectedCategories[0]
+        : null;
+    const selectedSubcategory = singleCategorySelection
+        ? getCategorySubcategoryById(singleCategorySelection, selectedSubcategoryId)
+        : null;
+    const emptyStateTitle = selectedSubcategory
+        ? `${selectedSubcategory.label} Placeholder`
+        : singleCategorySelection
+            ? `${CATEGORY_DISPLAY_NAMES[singleCategorySelection]} Placeholder`
+        : "No products found";
+    const emptyStateBody = selectedSubcategory
+        ? `${selectedSubcategory.label} products will land here once the catalog is ready.`
+        : singleCategorySelection
+            ? `${CATEGORY_DISPLAY_NAMES[singleCategorySelection]} products will land here once the catalog is ready.`
+        : "Try adjusting your filters";
 
     return (
         <div className="min-h-screen pb-4 md:pb-8 bg-[#ffffff] text-black font-mono">
             <Header
                 selectedCategories={selectedCategories}
                 selectedGenders={selectedGenders}
-                selectedSizes={selectedSizes}
+                selectedSubcategoryId={selectedSubcategoryId}
                 productCount={filteredProducts.length}
                 totalCategoryCount={totalCategoryCount}
-                onCategoriesChange={setSelectedCategories}
+                onCategoriesChange={(categories) => {
+                    setSelectedCategories(categories);
+                    setSelectedSubcategoryId(null);
+                }}
                 onGendersChange={setSelectedGenders}
-                onSizesChange={setSelectedSizes}
+                onSubcategoryChange={setSelectedSubcategoryId}
+                sortOrder={sortOrder}
+                onSortChange={setSortOrder}
                 onLogoClick={toggleGridMode}
             />
 
-            <BannerCarousel banners={bannerImages} />
+            <BannerCarousel bannerImages={bannerImages} />
 
             <main className="px-1.5 md:px-3 mt-5 md:mt-6">
                 <div className="md:hidden text-[9px] text-gray-400 uppercase tracking-widest font-mono mb-4 pl-1">
@@ -141,13 +197,18 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImage[] }) {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col items-center justify-center py-20 text-center"
+                        className="flex flex-col items-center justify-center py-20 text-center border border-black/10 bg-[#f4f1ea]"
                     >
-                        <p className="text-gray-400 uppercase tracking-widest text-sm mb-4">
-                            No products found
+                        {singleCategorySelection && (
+                            <span className="mb-5 border border-black/10 px-3 py-2 text-[9px] uppercase tracking-[0.35em] text-black/45">
+                                Coming Soon
+                            </span>
+                        )}
+                        <p className="text-gray-500 uppercase tracking-[0.28em] text-sm mb-4">
+                            {emptyStateTitle}
                         </p>
-                        <p className="text-gray-300 text-xs">
-                            Try adjusting your filters
+                        <p className="text-gray-400 text-xs max-w-sm leading-relaxed uppercase tracking-[0.16em]">
+                            {emptyStateBody}
                         </p>
                     </motion.div>
                 )}

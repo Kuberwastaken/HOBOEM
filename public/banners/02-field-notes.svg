@@ -1,17 +1,13 @@
 <svg width="2000" height="800" viewBox="0 0 2000 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="2000" height="800" fill="#BEB7AA"/>
-  <rect x="88" y="88" width="1824" height="624" fill="#F4F1EA"/>
-  <rect x="88" y="88" width="1824" height="624" stroke="#111111" stroke-opacity="0.12"/>
-  <rect x="128" y="128" width="420" height="544" fill="#111111"/>
-  <rect x="576" y="152" width="1260" height="48" fill="#111111" fill-opacity="0.05"/>
-  <rect x="576" y="230" width="960" height="2" fill="#111111" fill-opacity="0.12"/>
-  <rect x="576" y="294" width="1140" height="2" fill="#111111" fill-opacity="0.1"/>
-  <rect x="576" y="358" width="860" height="2" fill="#111111" fill-opacity="0.08"/>
-  <text x="164" y="228" fill="#F4F1EA" fill-opacity="0.58" font-family="IBM Plex Mono, monospace" font-size="24" letter-spacing="7">SEASON SHEET / 02</text>
-  <text x="164" y="430" fill="#F4F1EA" font-family="IBM Plex Mono, monospace" font-size="142" font-weight="700" letter-spacing="-7">FIELD</text>
-  <text x="164" y="560" fill="#F4F1EA" font-family="IBM Plex Mono, monospace" font-size="142" font-weight="700" letter-spacing="-7">NOTES</text>
-  <text x="576" y="478" fill="#111111" font-family="IBM Plex Mono, monospace" font-size="150" font-weight="700" letter-spacing="-8">HOBOEM</text>
-  <text x="580" y="560" fill="#111111" fill-opacity="0.5" font-family="IBM Plex Mono, monospace" font-size="30" letter-spacing="8">MONOCHROME STORAGE / OBJECT STUDY / TEMP SET</text>
-  <rect x="1532" y="472" width="240" height="160" fill="#111111" fill-opacity="0.06"/>
-  <rect x="1580" y="520" width="144" height="64" fill="#111111"/>
+  <rect width="2000" height="800" fill="#BFB8AB"/>
+  <rect x="64" y="64" width="1872" height="672" fill="#F3F0E8"/>
+  <rect x="64" y="64" width="1872" height="672" stroke="#111111" stroke-opacity="0.12" stroke-width="2"/>
+  <rect x="368" y="150" width="1264" height="500" fill="#111111" fill-opacity="0.05" stroke="#111111" stroke-opacity="0.18" stroke-dasharray="12 12"/>
+  <rect x="114" y="114" width="420" height="572" fill="#111111"/>
+  <text x="164" y="198" fill="#F3F0E8" fill-opacity="0.58" font-family="IBM Plex Mono, monospace" font-size="24" letter-spacing="7">LAYOUT GUIDE / DESKTOP</text>
+  <text x="164" y="356" fill="#F3F0E8" font-family="IBM Plex Mono, monospace" font-size="132" font-weight="700" letter-spacing="-7">2000</text>
+  <text x="164" y="470" fill="#F3F0E8" font-family="IBM Plex Mono, monospace" font-size="132" font-weight="700" letter-spacing="-7">800</text>
+  <text x="602" y="278" fill="#111111" font-family="IBM Plex Mono, monospace" font-size="122" font-weight="700" letter-spacing="-6">MAIN COPY</text>
+  <text x="604" y="360" fill="#111111" fill-opacity="0.52" font-family="IBM Plex Mono, monospace" font-size="32" letter-spacing="8">USE THIS AREA FOR PRIMARY STORY, PRODUCT, CTA</text>
+  <text x="604" y="602" fill="#111111" fill-opacity="0.36" font-family="IBM Plex Mono, monospace" font-size="26" letter-spacing="6">OUTER MARGINS ARE GOOD FOR TEXTURE, EMPTY SPACE, OR SECONDARY DETAIL</text>
 </svg>

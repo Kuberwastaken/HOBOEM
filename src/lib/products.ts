@@ -2119,3 +2119,22 @@ export function filterProducts(
         return true;
     });
 }
+
+// Flatten grouped products so every variant becomes its own standalone Product entry.
+// Each resulting Product has exactly one variant (the original variant) and uses the
+// variantId as its unique id so it can be individually displayed and added to cart.
+export function flattenProducts(products: Product[]): Product[] {
+    const result: Product[] = [];
+    for (const product of products) {
+        for (const variant of product.variants) {
+            result.push({
+                ...product,
+                id: variant.variantId,
+                name: variant.variantId,
+                price: variant.price ?? product.price,
+                variants: [variant],
+            });
+        }
+    }
+    return result;
+}

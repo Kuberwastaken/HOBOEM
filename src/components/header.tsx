@@ -1,215 +1,462 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { FocusEvent, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import {
     Category,
-    Gender,
-    Size,
+    CategorySubcategory,
     CATEGORIES,
     CATEGORY_DISPLAY_NAMES,
-    GENDER_DISPLAY_NAMES,
-    SIZES,
-    CATEGORY_FILTER_CONFIG,
-    getAvailableGenders,
+    Gender,
+    getCategorySubcategories,
+    ProductSort,
+    PRODUCT_SORT_DISPLAY_NAMES,
 } from "@/lib/filter-config";
-import { Plus, Minus, Menu, X } from "lucide-react";
 
 interface HeaderProps {
     selectedCategories: Category[];
     selectedGenders: Gender[];
-    selectedSizes: Size[];
+    selectedSubcategoryId: string | null;
     productCount: number;
     totalCategoryCount: number;
+    sortOrder: ProductSort;
     onCategoriesChange: (categories: Category[]) => void;
     onGendersChange: (genders: Gender[]) => void;
-    onSizesChange: (sizes: Size[]) => void;
+    onSubcategoryChange: (subcategoryId: string | null) => void;
+    onSortChange: (sortOrder: ProductSort) => void;
     onLogoClick?: () => void;
 }
 
-// Checkbox Component for Multi-Select
-const Checkbox = ({ checked }: { checked: boolean }) => (
-    <div className={`w-3 h-3 md:w-3.5 md:h-3.5 border border-black mr-2 flex items-center justify-center transition-colors ${checked ? "bg-black" : "bg-white"}`}>
-        {checked && <X className="w-2.5 h-2.5 md:w-3 md:h-3 text-white" />}
-    </div>
-);
+const SORT_OPTIONS: ProductSort[] = ["FEATURED", "PRICE_ASC", "PRICE_DESC"];
+
+function Checkbox({ checked }: { checked: boolean }) {
+    return (
+        <span className={`mr-2 flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center border border-current ${checked ? "bg-black text-white" : "bg-white text-transparent"}`}>
+            <X className="h-2.5 w-2.5" strokeWidth={2.2} />
+        </span>
+    );
+}
+
+function didFocusLeaveContainer(
+    event: FocusEvent<HTMLElement>,
+    currentTarget: HTMLElement,
+) {
+    const nextTarget = event.relatedTarget;
+    return !(nextTarget instanceof Node) || !currentTarget.contains(nextTarget);
+}
+
+function matchesSelectedGenders(selectedGenders: Gender[], genders?: Gender[]) {
+    if (!genders || genders.length === 0) {
+        return selectedGenders.length === 0;
+    }
+
+    return (
+        selectedGenders.length === genders.length
+        && genders.every((gender) => selectedGenders.includes(gender))
+    );
+}
+
+function isSubcategoryActive(
+    activeCategory: Category,
+    activeGenders: Gender[],
+    activeSubcategoryId: string | null,
+    category: Category,
+    subcategory: CategorySubcategory,
+) {
+    return activeCategory === category && (
+        activeSubcategoryId === subcategory.id
+        || (
+            !activeSubcategoryId
+            && subcategory.isDefault
+            && matchesSelectedGenders(activeGenders, subcategory.genders)
+        )
+    );
+}
+
+function DesktopSubcategoryMenu({
+    category,
+    selectedCategory,
+    selectedGenders,
+    selectedSubcategoryId,
+    onSelect,
+}: {
+    category: Category;
+    selectedCategory: Category;
+    selectedGenders: Gender[];
+    selectedSubcategoryId: string | null;
+    onSelect: (subcategory: CategorySubcategory) => void;
+}) {
+    const subcategories = getCategorySubcategories(category);
+
+    if (subcategories.length === 0) {
+        return null;
+    }
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="absolute left-1/2 top-full z-[80] mt-3 min-w-[180px] -translate-x-1/2 border border-black/10 bg-[#f4f1ea] p-1.5 shadow-[0_18px_36px_rgba(0,0,0,0.08)]"
+        >
+            {subcategories.map((subcategory) => {
+                const isActive = selectedCategory === category && (
+                    selectedSubcategoryId === subcategory.id
+                    || (
+                        !selectedSubcategoryId
+                        && subcategory.isDefault
+                        && matchesSelectedGenders(selectedGenders, subcategory.genders)
+                    )
+                );
+
+                return (
+                    <button
+                        key={subcategory.id}
+                        type="button"
+                        onClick={() => onSelect(subcategory)}
+                        className={`flex w-full items-center justify-between px-3 py-2.5 text-left text-[10px] uppercase tracking-[0.24em] transition-colors ${isActive
+                            ? "bg-black text-white"
+                            : "text-black/60 hover:bg-black hover:text-white"
+                            }`}
+                    >
+                        <span>{subcategory.label}</span>
+                    </button>
+                );
+            })}
+        </motion.div>
+    );
+}
 
 export default function Header({
     selectedCategories,
     selectedGenders,
-    selectedSizes,
+    selectedSubcategoryId,
     productCount,
     totalCategoryCount,
+    sortOrder,
     onCategoriesChange,
     onGendersChange,
-    onSizesChange,
+    onSubcategoryChange,
+    onSortChange,
     onLogoClick,
 }: HeaderProps) {
     const cart = useCart();
-    const itemCount = cart?.items.length || 0;
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const itemCount = cart.items.length;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    // Global Multi-Select Toggle
+    const [logoMenuOpen, setLogoMenuOpen] = useState(false);
+    const [desktopOpenMenu, setDesktopOpenMenu] = useState<Category | "SORT" | null>(null);
     const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
 
-    // Local State for Menu (Deferred application)
-    const [tempCategories, setTempCategories] = useState<Category[]>(selectedCategories);
-    const [tempGenders, setTempGenders] = useState<Gender[]>(selectedGenders);
-    const [tempSizes, setTempSizes] = useState<Size[]>(selectedSizes);
+    const selectedCategory = selectedCategories.length === 1
+        ? selectedCategories[0]
+        : null;
+    const [tempSelectedCategories, setTempSelectedCategories] = useState<Category[]>(selectedCategories);
+    const [tempSelectedGenders, setTempSelectedGenders] = useState<Gender[]>(selectedGenders);
+    const [tempSelectedSubcategoryId, setTempSelectedSubcategoryId] = useState<string | null>(selectedSubcategoryId);
+    const [tempSortOrder, setTempSortOrder] = useState<ProductSort>(sortOrder);
+    const tempSelectedCategory = tempSelectedCategories.length === 1
+        ? tempSelectedCategories[0]
+        : null;
 
-    // Sync local state when menu opens
-    useEffect(() => {
+    const mobileSubcategories = tempSelectedCategory
+        ? getCategorySubcategories(tempSelectedCategory)
+        : [];
+
+    const closeDesktopMenus = () => setDesktopOpenMenu(null);
+    const closeMobileMenu = () => setIsMenuOpen(false);
+
+    const openMobileMenu = () => {
+        setTempSelectedCategories(selectedCategories);
+        setTempSelectedGenders(selectedGenders);
+        setTempSelectedSubcategoryId(selectedSubcategoryId);
+        setTempSortOrder(sortOrder);
+        closeDesktopMenus();
+        setIsMenuOpen(true);
+    };
+
+    const handleLogoClick = () => {
+        if (onLogoClick) {
+            onLogoClick();
+        }
+        closeMobileMenu();
+        closeDesktopMenus();
+    };
+
+    const handleCategorySelect = (category: Category) => {
+        onCategoriesChange([category]);
+        onGendersChange([]);
+        onSubcategoryChange(null);
+        closeDesktopMenus();
+    };
+
+    const handleSubcategorySelect = (category: Category, subcategory: CategorySubcategory) => {
+        onCategoriesChange([category]);
+        onGendersChange(subcategory.genders ?? []);
+        onSubcategoryChange(subcategory.isDefault ? null : subcategory.id);
+        closeDesktopMenus();
+    };
+
+    const handleSortSelect = (nextSortOrder: ProductSort) => {
+        onSortChange(nextSortOrder);
+        closeDesktopMenus();
+    };
+
+    const toggleMobileMenu = () => {
         if (isMenuOpen) {
-            setTempCategories(selectedCategories);
-            setTempGenders(selectedGenders);
-            setTempSizes(selectedSizes);
+            closeMobileMenu();
+            return;
         }
-    }, [isMenuOpen, selectedCategories, selectedGenders, selectedSizes]);
 
-    const handleApply = () => {
-        onCategoriesChange(tempCategories);
-        onGendersChange(tempGenders);
-        onSizesChange(tempSizes);
-        setIsMenuOpen(false);
+        openMobileMenu();
     };
 
-    // Helper: Toggle Selection Logic
-    const toggleList = <T,>(list: T[], item: T, canBeEmpty: boolean = true): T[] => {
-        if (isMultiSelectMode) {
-            // Multi-Select: Toggle
-            if (list.includes(item)) {
-                const newList = list.filter(i => i !== item);
-                // If removing makes it empty and not allowed, handle?
-                // For now, allow empty (which might mean "ALL" relative to global logic, but we handle empty arrays in page)
-                return newList;
-            }
-            // Support selecting "ALL" in Multi Mode?
-            // Usually "ALL" clears list.
-            if (item === "ALL" as unknown as T) return ["ALL" as unknown as T];
-
-            // If adding regular item, remove "ALL" if present
-            const cleanList = list.filter(i => i !== "ALL" as unknown as T);
-            return [...cleanList, item];
-        } else {
-            // Single Select: Replace
-            // If clicking same item? Replace.
-            return [item];
-        }
-    };
-
-    const handleTempCategoryChange = (cat: Category) => {
-        const newList = toggleList(tempCategories, cat);
-        setTempCategories(newList);
-        // If single select, we normally clear filters.
-        // If multi select, arguably we keep them? 
-        // For simplicity: Clear filters if switching in Single Mode. Keep in Multi?
+    const toggleCategorySelection = (categories: Category[], category: Category) => {
         if (!isMultiSelectMode) {
-            setTempGenders([]);
-            setTempSizes([]);
+            return [category];
         }
-    };
 
-    const handleDesktopCategoryChange = (cat: Category) => {
-        const newList = toggleList(selectedCategories, cat);
-        onCategoriesChange(newList);
-        if (!isMultiSelectMode) {
-            onGendersChange([]);
-            onSizesChange([]);
+        if (category === "ALL") {
+            return ["ALL"];
         }
+
+        const categoriesWithoutAll = categories.filter((item) => item !== "ALL");
+        const nextCategories = categoriesWithoutAll.includes(category)
+            ? categoriesWithoutAll.filter((item) => item !== category)
+            : [...categoriesWithoutAll, category];
+
+        return nextCategories.length > 0 ? nextCategories : ["ALL"];
     };
 
-    // Helpers to resolve available filters based on current *Set* of categories
-    const getDerivedFilters = (categories: Category[]) => {
-        // If "ALL" is selected, we assume basically everything? Or specific ALL logic?
-        // Current config: ALL has no specific config.
-        // We iterate over specific categories selected.
-        // If list is empty or ["ALL"], show ALL filters? Or "ALL" means all categories.
-        // Let's assume if ["ALL"], we show everything.
-        const effectiveCats = (categories.includes("ALL") || categories.length === 0)
-            ? CATEGORIES
-            : categories;
-
-        const hasGender = effectiveCats.some(c => CATEGORY_FILTER_CONFIG[c]?.hasGender);
-        const hasSize = effectiveCats.some(c => CATEGORY_FILTER_CONFIG[c]?.hasSize);
-        // Union of available keys
-        const availableGenders = Array.from(new Set(
-            effectiveCats.flatMap(c => getAvailableGenders(c))
-        ));
-
-        return { hasGender, hasSize, availableGenders };
+    const handleMobileCategorySelect = (category: Category) => {
+        const nextCategories = toggleCategorySelection(tempSelectedCategories, category);
+        setTempSelectedCategories(nextCategories);
+        setTempSelectedGenders([]);
+        setTempSelectedSubcategoryId(null);
     };
 
-    const menuFilters = getDerivedFilters(tempCategories);
-    const desktopFilters = getDerivedFilters(selectedCategories);
+    const handleMobileSubcategorySelect = (
+        category: Category,
+        subcategory: CategorySubcategory,
+    ) => {
+        setTempSelectedCategories([category]);
+        setTempSelectedGenders(subcategory.genders ?? []);
+        setTempSelectedSubcategoryId(subcategory.isDefault ? null : subcategory.id);
+    };
+
+    const handleMobileApply = () => {
+        onCategoriesChange(tempSelectedCategories);
+        onGendersChange(tempSelectedGenders);
+        onSubcategoryChange(tempSelectedSubcategoryId);
+        onSortChange(tempSortOrder);
+        closeMobileMenu();
+    };
 
     return (
-        <header className="sticky top-0 z-50 bg-[#ffffff]">
-            {/* 1. Navbar Top Row */}
-            <div className="flex items-center justify-between px-3 py-5 relative max-w-[1920px] mx-auto w-full">
-
-                {/* Logo */}
-                <div className="flex items-center gap-4 flex-shrink-0 w-[100px] md:w-[200px] z-[70]">
-                    <button
-                        onClick={() => {
-                            if (onLogoClick) onLogoClick();
-                            setIsMenuOpen(false);
+        <header className="sticky top-0 z-50 bg-white">
+            <div className="relative mx-auto flex w-full max-w-[1920px] items-center justify-between px-3 py-5">
+                <div className="z-[70] flex w-[120px] flex-shrink-0 items-center gap-4 md:w-[220px]">
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setLogoMenuOpen(true)}
+                        onMouseLeave={() => setLogoMenuOpen(false)}
+                        onBlurCapture={(event) => {
+                            if (didFocusLeaveContainer(event, event.currentTarget)) {
+                                setLogoMenuOpen(false);
+                            }
                         }}
-                        className="text-lg md:text-xl font-bold tracking-tighter uppercase hover:opacity-50 transition-opacity"
                     >
-                        HOBOEM
-                    </button>
+                        <div className="flex items-center gap-1">
+                            <button
+                                type="button"
+                                onClick={handleLogoClick}
+                                className="text-lg font-bold uppercase tracking-tighter transition-opacity hover:opacity-50 md:text-xl"
+                            >
+                                HOBOEM
+                            </button>
+                            <ChevronDown className={`h-3 w-3 text-black/30 transition-transform ${logoMenuOpen ? "rotate-180" : ""}`} strokeWidth={2} />
+                        </div>
+
+                        <AnimatePresence>
+                            {logoMenuOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 6 }}
+                                    transition={{ duration: 0.18, ease: "easeOut" }}
+                                    className="absolute left-0 top-full z-[80] mt-3 w-[220px] bg-white p-1.5 shadow-[0_18px_36px_rgba(0,0,0,0.08)] border border-black/10"
+                                >
+                                    {([
+                                        { label: "About Us",        href: "/about" },
+                                        { label: "Contact Us",       href: "/contact" },
+                                        { label: "Our Clients",      href: "/clients" },
+                                        { label: "Online Partners",  href: "/partners" },
+                                    ] as const).map((item) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={() => setLogoMenuOpen(false)}
+                                            className="flex w-full items-center px-3 py-2.5 text-left text-[10px] uppercase tracking-[0.24em] text-black/60 transition-colors hover:bg-black hover:text-white"
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
 
-                {/* Categories - Desktop Only - Absolute Center - Single Row */}
-                <div className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2 text-[12px] md:text-[13px] text-gray-400 font-[family-name:var(--font-dm-sans)]">
-                    {CATEGORIES.map((cat) => (
-                        <motion.button
-                            key={cat}
-                            onClick={() => handleDesktopCategoryChange(cat)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className={`uppercase transition-colors tracking-wide flex items-center ${selectedCategories.includes(cat) ? "text-black font-bold" : "hover:text-black"
-                                }`}
-                        >
-                            {isMultiSelectMode && <Checkbox checked={selectedCategories.includes(cat)} />}
-                            {CATEGORY_DISPLAY_NAMES[cat]}
-                        </motion.button>
-                    ))}
+                <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-5 text-[12px] text-gray-400 md:flex">
+                    {CATEGORIES.map((category) => {
+                        const hasSubcategories = getCategorySubcategories(category).length > 0;
+                        const isOpen = desktopOpenMenu === category;
+                        const isActive = selectedCategories.includes(category);
+
+                        return (
+                            <div
+                                key={category}
+                                className="relative"
+                                onMouseEnter={() => {
+                                    if (hasSubcategories) {
+                                        setDesktopOpenMenu(category);
+                                    } else {
+                                        closeDesktopMenus();
+                                    }
+                                }}
+                                onMouseLeave={() => {
+                                    if (desktopOpenMenu === category) {
+                                        closeDesktopMenus();
+                                    }
+                                }}
+                                onFocusCapture={() => {
+                                    if (hasSubcategories) {
+                                        setDesktopOpenMenu(category);
+                                    }
+                                }}
+                                onBlurCapture={(event) => {
+                                    if (didFocusLeaveContainer(event, event.currentTarget)) {
+                                        closeDesktopMenus();
+                                    }
+                                }}
+                            >
+                                <div className="flex items-center gap-1">
+                                    <motion.button
+                                        type="button"
+                                        onClick={() => handleCategorySelect(category)}
+                                        whileHover={{ scale: 1.04 }}
+                                        whileTap={{ scale: 0.97 }}
+                                        className={`uppercase tracking-[0.18em] transition-colors ${isActive ? "text-black" : "hover:text-black"
+                                            }`}
+                                    >
+                                        {CATEGORY_DISPLAY_NAMES[category]}
+                                    </motion.button>
+
+                                    {hasSubcategories && (
+                                        <button
+                                            type="button"
+                                            aria-label={`Show ${CATEGORY_DISPLAY_NAMES[category]} subcategories`}
+                                            onClick={() => setDesktopOpenMenu((currentMenu) => currentMenu === category ? null : category)}
+                                            className={`rounded-full p-1 transition-colors ${isActive || isOpen ? "text-black" : "text-black/35 hover:text-black"
+                                                }`}
+                                        >
+                                            <ChevronDown className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} strokeWidth={1.6} />
+                                        </button>
+                                    )}
+                                </div>
+
+                                <AnimatePresence>
+                                    {isOpen && (
+                                        <DesktopSubcategoryMenu
+                                            category={category}
+                                            selectedCategory={selectedCategory}
+                                            selectedGenders={selectedGenders}
+                                            selectedSubcategoryId={selectedSubcategoryId}
+                                            onSelect={(subcategory) => handleSubcategorySelect(category, subcategory)}
+                                        />
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        );
+                    })}
                 </div>
 
-                {/* Right Side Controls */}
-                <div className="flex items-center justify-end gap-3 md:gap-6 w-[100px] md:w-[200px] z-[70]">
-                    {/* Desktop Filter Toggle */}
-                    {(desktopFilters.hasGender || desktopFilters.hasSize) && (
+                <div className="z-[70] flex w-[120px] items-center justify-end gap-3 md:w-[220px] md:gap-4">
+                    <div
+                        className="relative hidden md:block"
+                        onMouseEnter={() => setDesktopOpenMenu("SORT")}
+                        onMouseLeave={() => {
+                            if (desktopOpenMenu === "SORT") {
+                                closeDesktopMenus();
+                            }
+                        }}
+                        onFocusCapture={() => setDesktopOpenMenu("SORT")}
+                        onBlurCapture={(event) => {
+                            if (didFocusLeaveContainer(event, event.currentTarget)) {
+                                closeDesktopMenus();
+                            }
+                        }}
+                    >
                         <button
-                            onClick={() => setIsFilterOpen(!isFilterOpen)}
-                            className={`hidden md:flex items-center gap-2 px-2 md:px-2.5 py-1 md:py-1.5 rounded-sm transition-all text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase border ${isFilterOpen
-                                ? "bg-black text-white border-black"
-                                : "bg-transparent text-black border-gray-300 hover:border-black"
+                            type="button"
+                            onClick={() => setDesktopOpenMenu((currentMenu) => currentMenu === "SORT" ? null : "SORT")}
+                            className={`flex items-center gap-1.5 border border-black/12 px-3 py-2 text-[10px] uppercase tracking-[0.26em] transition-colors ${desktopOpenMenu === "SORT" || sortOrder !== "FEATURED"
+                                ? "text-black border-black/25"
+                                : "text-black/55 hover:text-black"
                                 }`}
                         >
-                            <span>Sort By</span>
-                            {isFilterOpen ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                            <span>{sortOrder === "FEATURED" ? "Price" : PRODUCT_SORT_DISPLAY_NAMES[sortOrder]}</span>
+                            <ChevronDown className={`h-3.5 w-3.5 transition-transform ${desktopOpenMenu === "SORT" ? "rotate-180" : ""}`} strokeWidth={1.6} />
                         </button>
-                    )}
 
-                    {/* Mobile Menu Toggle */}
+                        <AnimatePresence>
+                            {desktopOpenMenu === "SORT" && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 6 }}
+                                    transition={{ duration: 0.18, ease: "easeOut" }}
+                                    className="absolute right-0 top-full z-[80] mt-3 min-w-[180px] border border-black/10 bg-[#f4f1ea] p-1.5 shadow-[0_18px_36px_rgba(0,0,0,0.08)]"
+                                >
+                                    {SORT_OPTIONS.map((option) => {
+                                        const isActive = option === sortOrder;
+
+                                        return (
+                                            <button
+                                                key={option}
+                                                type="button"
+                                                onClick={() => handleSortSelect(option)}
+                                                className={`flex w-full items-center justify-between px-3 py-2.5 text-left text-[10px] uppercase tracking-[0.24em] transition-colors ${isActive
+                                                    ? "bg-black text-white"
+                                                    : "text-black/60 hover:bg-black hover:text-white"
+                                                    }`}
+                                            >
+                                                <span>{PRODUCT_SORT_DISPLAY_NAMES[option]}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
                     <button
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="md:hidden p-1"
+                        type="button"
+                        onClick={toggleMobileMenu}
+                        className="p-1 md:hidden"
+                        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                     >
-                        {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                        {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                     </button>
 
-                    {/* Cart */}
                     <Link
                         href="/checkout"
-                        className="flex items-center gap-1.5 hover:opacity-50 transition-opacity flex-shrink-0"
+                        className="flex flex-shrink-0 items-center gap-1.5 transition-opacity hover:opacity-50"
                     >
-                        <span className="text-xs md:text-sm font-bold font-mono pt-0.5">{itemCount}</span>
+                        <span className="pt-0.5 text-xs font-bold md:text-sm">{itemCount}</span>
                         <svg
                             width="24"
                             height="24"
@@ -219,7 +466,7 @@ export default function Header({
                             strokeWidth="2.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="w-4 h-4 md:w-5 md:h-5 pb-[1px]"
+                            className="h-4 w-4 pb-[1px] md:h-5 md:w-5"
                         >
                             <path d="M8 10V7a4 4 0 0 1 8 0v3" />
                             <rect x="4" y="10" width="16" height="12" rx="2.5" />
@@ -228,223 +475,155 @@ export default function Header({
                 </div>
             </div>
 
-            {/* Mobile Hamburger Menu Overlay - INDUSTRIAL / SPREADSHEET STYLE */}
             <AnimatePresence>
                 {isMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
+                        initial={{ opacity: 0, y: -16 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
+                        exit={{ opacity: 0, y: -16 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed inset-0 top-[60px] bg-white z-[60] flex flex-col md:hidden"
+                        className="fixed inset-0 top-[69px] z-[60] flex flex-col bg-white md:hidden"
                     >
-                        <div className="flex flex-col flex-1 overflow-y-auto">
-                            {/* Categories Section */}
-                            <div className="px-3 pb-2 pt-2 flex justify-between items-center">
-                                <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Categories</span>
-                                {/* Mobile Multi-Select Toggle */}
-                                <button
-                                    onClick={() => setIsMultiSelectMode(!isMultiSelectMode)}
-                                    className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-[family-name:var(--font-dm-sans)]"
-                                >
-                                    <div className={`w-3 h-3 border border-black flex items-center justify-center ${isMultiSelectMode ? "bg-black" : "bg-white"}`}>
-                                    </div>
-                                    Multi Select
-                                </button>
+                        <div className="border-b border-black/8 px-4 py-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-[10px] uppercase tracking-[0.34em] text-black/40">Categories</span>
+                                <span className="text-[10px] uppercase tracking-[0.28em] text-black/35">
+                                    {productCount}/{totalCategoryCount} Items
+                                </span>
                             </div>
-                            <div className="grid grid-cols-2 border-t border-gray-200">
-                                {CATEGORIES.map((cat, index) => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => handleTempCategoryChange(cat)}
-                                        className={`flex items-center justify-center p-4 text-xs font-[family-name:var(--font-dm-sans)] uppercase tracking-widest transition-colors border-b border-r border-gray-200 rounded-none ${(index + 1) % 2 === 0 ? "border-r-0" : ""
-                                            } ${tempCategories.includes(cat) ? "bg-black text-white" : "text-black hover:bg-gray-50"
-                                            }`}
-                                    >
-                                        {isMultiSelectMode && <Checkbox checked={tempCategories.includes(cat)} />}
-                                        {CATEGORY_DISPLAY_NAMES[cat]}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* Filters Section */}
-                            {(menuFilters.hasGender || menuFilters.hasSize) && (
-                                <div className="flex flex-col gap-6 pt-8 px-3 mt-4">
-                                    <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold font-[family-name:var(--font-dm-sans)]">Sort</span>
-
-                                    {/* Gender Filters */}
-                                    {menuFilters.hasGender && (
-                                        <div className="flex flex-col gap-3">
-                                            <span className="text-[10px] text-gray-500 uppercase tracking-widest">Gender</span>
-                                            <div className="flex flex-wrap">
-                                                <button
-                                                    onClick={() => setTempGenders(toggleList(tempGenders, "ALL" as unknown as Gender))} // Fix casting for ALL logic? Or specific reset
-                                                    // "ALL" in Multi select usually maps to Empty Array in page logic.
-                                                    // Here simply clearing selection.
-                                                    className={`flex-1 min-w-[30%] px-2 py-3 text-[10px] font-mono uppercase tracking-widest border border-gray-300 transition-colors rounded-none -ml-[1px] first:ml-0 -mt-[1px] first:mt-0 ${tempGenders.length === 0 ? "bg-black text-white border-black z-10" : "text-gray-500 hover:bg-gray-50"
-                                                        }`}
-                                                >
-                                                    All
-                                                </button>
-                                                {menuFilters.availableGenders.map((gender) => (
-                                                    <button
-                                                        key={gender}
-                                                        onClick={() => setTempGenders(toggleList(tempGenders, gender))}
-                                                        className={`flex-1 min-w-[30%] px-2 py-3 text-[10px] font-mono uppercase tracking-widest border border-gray-300 transition-colors rounded-none -ml-[1px] -mt-[1px] flex items-center justify-center ${tempGenders.includes(gender) ? "bg-black text-white border-black z-10" : "text-gray-500 hover:bg-gray-50"
-                                                            }`}
-                                                    >
-                                                        {isMultiSelectMode && <Checkbox checked={tempGenders.includes(gender)} />}
-                                                        {GENDER_DISPLAY_NAMES[gender]}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Size Filters */}
-                                    {menuFilters.hasSize && (
-                                        <div className="flex flex-col gap-3">
-                                            <span className="text-[10px] text-gray-500 uppercase tracking-widest">Size</span>
-                                            <div className="flex flex-wrap">
-                                                <button
-                                                    onClick={() => setTempSizes([])}
-                                                    className={`flex-1 min-w-[14%] px-2 py-3 text-[10px] font-mono uppercase tracking-widest border border-gray-300 transition-colors rounded-none -ml-[1px] first:ml-0 -mt-[1px] first:mt-0 ${tempSizes.length === 0 ? "bg-black text-white border-black z-10" : "text-gray-500 hover:bg-gray-50"
-                                                        }`}
-                                                >
-                                                    All
-                                                </button>
-                                                {SIZES.map((size) => (
-                                                    <button
-                                                        key={size}
-                                                        onClick={() => setTempSizes(toggleList(tempSizes, size))}
-                                                        className={`flex-1 min-w-[14%] px-2 py-3 text-[10px] font-mono uppercase tracking-widest border border-gray-300 transition-colors rounded-none -ml-[1px] -mt-[1px] flex items-center justify-center ${tempSizes.includes(size) ? "bg-black text-white border-black z-10" : "text-gray-500 hover:bg-gray-50"
-                                                            }`}
-                                                    >
-                                                        {isMultiSelectMode && <Checkbox checked={tempSizes.includes(size)} />}
-                                                        {size}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                            <div className="h-24"></div>
                         </div>
 
-                        {/* Apply Button Footer */}
-                        <div className="p-4 border-t border-gray-100 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                        <div className="flex-1 overflow-y-auto pb-8">
+                            <div className="px-3 py-3">
+                                <div className="mb-2 flex items-center justify-between gap-3">
+                                    <div className="font-mono text-[10px] uppercase tracking-[0.34em] text-black/40">
+                                        Browse
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsMultiSelectMode((currentValue) => !currentValue)}
+                                        className="flex items-center font-mono text-[10px] uppercase tracking-[0.24em] text-black/65"
+                                    >
+                                        <Checkbox checked={isMultiSelectMode} />
+                                        Multi Select
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-2 border border-black/8">
+                                    {CATEGORIES.map((category, index) => {
+                                        const isActive = tempSelectedCategories.includes(category);
+                                        const isRightColumn = index % 2 === 1;
+                                        const isLastRow = index >= CATEGORIES.length - 2;
+
+                                        return (
+                                            <button
+                                                key={category}
+                                                type="button"
+                                                onClick={() => handleMobileCategorySelect(category)}
+                                                className={`flex min-h-[48px] items-center justify-center px-3 text-center font-mono text-[10px] uppercase tracking-[0.24em] transition-colors ${isRightColumn ? "" : "border-r border-black/8"
+                                                    } ${isLastRow ? "" : "border-b border-black/8"} ${isActive
+                                                        ? "bg-black text-white"
+                                                        : "bg-white text-black/75 hover:bg-black/5 hover:text-black"
+                                                    }`}
+                                            >
+                                                {isMultiSelectMode && <Checkbox checked={isActive} />}
+                                                {CATEGORY_DISPLAY_NAMES[category]}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <AnimatePresence initial={false}>
+                                {tempSelectedCategory && mobileSubcategories.length > 0 && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.18, ease: "easeInOut" }}
+                                        className="overflow-hidden border-t border-black/8"
+                                    >
+                                        <div className="px-3 py-4">
+                                            <div className="mb-3 flex items-center justify-between">
+                                                <span className="font-mono text-[10px] uppercase tracking-[0.34em] text-black/40">
+                                                    {CATEGORY_DISPLAY_NAMES[tempSelectedCategory]}
+                                                </span>
+                                                <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-black/25">
+                                                    Subcategories
+                                                </span>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 border border-black/8">
+                                                {mobileSubcategories.map((subcategory, index) => {
+                                                    const isActive = isSubcategoryActive(
+                                                        tempSelectedCategory,
+                                                        tempSelectedGenders,
+                                                        tempSelectedSubcategoryId,
+                                                        tempSelectedCategory,
+                                                        subcategory,
+                                                    );
+                                                    const isRightColumn = index % 2 === 1;
+                                                    const isLastRow = index >= mobileSubcategories.length - 2;
+
+                                                    return (
+                                                        <button
+                                                            key={subcategory.id}
+                                                            type="button"
+                                                            onClick={() => handleMobileSubcategorySelect(tempSelectedCategory, subcategory)}
+                                                            className={`flex min-h-[48px] items-center justify-between px-3 text-left font-mono text-[10px] uppercase tracking-[0.24em] transition-colors ${isRightColumn ? "" : "border-r border-black/8"
+                                                                } ${isLastRow ? "" : "border-b border-black/8"} ${isActive
+                                                                    ? "bg-black text-white"
+                                                                    : "bg-white text-black/70 hover:bg-black/5 hover:text-black"
+                                                                }`}
+                                                        >
+                                                            <span>{subcategory.label}</span>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            <div className="border-t border-black/8 px-3 py-4">
+                                <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.34em] text-black/40">
+                                    Price Sort
+                                </div>
+
+                                <div className="grid grid-cols-2 border border-black/8">
+                                    {SORT_OPTIONS.map((option, index) => {
+                                        const isActive = option === tempSortOrder;
+                                        const isRightColumn = index % 2 === 1;
+                                        const isLastRow = index >= SORT_OPTIONS.length - 2;
+
+                                        return (
+                                            <button
+                                                key={option}
+                                                type="button"
+                                                onClick={() => setTempSortOrder(option)}
+                                                className={`flex min-h-[48px] items-center justify-between px-3 text-left font-mono text-[10px] uppercase tracking-[0.24em] transition-colors ${isRightColumn ? "" : "border-r border-black/8"
+                                                    } ${isLastRow ? "" : "border-b border-black/8"} ${isActive
+                                                        ? "bg-black text-white"
+                                                        : "bg-white text-black/70 hover:bg-black/5 hover:text-black"
+                                                    }`}
+                                            >
+                                                <span>{PRODUCT_SORT_DISPLAY_NAMES[option]}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-black/8 bg-white p-4">
                             <button
-                                onClick={handleApply}
-                                className="w-full bg-black text-white py-4 text-xs font-mono font-bold uppercase tracking-[0.2em] hover:bg-gray-900 transition-colors"
+                                type="button"
+                                onClick={handleMobileApply}
+                                className="w-full bg-black py-4 text-xs font-bold uppercase tracking-[0.24em] text-white"
                             >
                                 Apply Selection
                             </button>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Desktop Filter Bar */}
-            <AnimatePresence>
-                {isFilterOpen && (desktopFilters.hasGender || desktopFilters.hasSize) && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="hidden md:block overflow-hidden bg-[#f5f5f5]"
-                    >
-                        <div className="flex flex-col md:flex-row items-center justify-between px-1.5 md:px-3 py-4 md:py-8 relative max-w-[1920px] mx-auto w-full gap-3 md:gap-0">
-
-                            {/* Product Count */}
-                            <div className="hidden md:flex items-center justify-start w-[200px] order-1">
-                                <div className="text-[10px] text-gray-400 uppercase tracking-widest font-mono">
-                                    {productCount}/{totalCategoryCount} Items
-                                </div>
-                            </div>
-
-                            {/* Filters Container */}
-                            <div className="static md:absolute md:left-1/2 md:-translate-x-1/2 flex flex-col md:flex-row items-center gap-2 md:gap-16 order-2 w-full md:w-auto">
-                                {/* Gender Filters */}
-                                {desktopFilters.hasGender && (
-                                    <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2">
-                                        <motion.button
-                                            onClick={() => onGendersChange([])}
-                                            whileTap={{ scale: 0.95 }}
-                                            className={`text-[9px] md:text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors ${selectedGenders.length === 0
-                                                ? "text-black font-bold"
-                                                : "text-gray-400 hover:text-black"
-                                                }`}
-                                        >
-                                            All
-                                        </motion.button>
-                                        {desktopFilters.availableGenders.map((gender) => (
-                                            <motion.button
-                                                key={gender}
-                                                onClick={() => onGendersChange(toggleList(selectedGenders, gender))}
-                                                whileTap={{ scale: 0.95 }}
-                                                className={`text-[9px] md:text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors flex items-center ${selectedGenders.includes(gender)
-                                                    ? "text-black font-bold"
-                                                    : "text-gray-400 hover:text-black"
-                                                    }`}
-                                            >
-                                                {isMultiSelectMode && <Checkbox checked={selectedGenders.includes(gender)} />}
-                                                {GENDER_DISPLAY_NAMES[gender]}
-                                            </motion.button>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {/* Divider */}
-                                {desktopFilters.hasGender && desktopFilters.hasSize && (
-                                    <div className="hidden md:block text-gray-400 font-bold tracking-widest text-[10px]">
-                                        //
-                                    </div>
-                                )}
-
-                                {/* Size Filters */}
-                                {desktopFilters.hasSize && (
-                                    <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-2 md:mt-0">
-                                        <motion.button
-                                            onClick={() => onSizesChange([])}
-                                            whileTap={{ scale: 0.95 }}
-                                            className={`text-[9px] md:text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors ${selectedSizes.length === 0
-                                                ? "text-black font-bold"
-                                                : "text-gray-400 hover:text-black"
-                                                }`}
-                                        >
-                                            All
-                                        </motion.button>
-                                        {SIZES.map((size) => (
-                                            <motion.button
-                                                key={size}
-                                                onClick={() => onSizesChange(toggleList(selectedSizes, size))}
-                                                whileTap={{ scale: 0.95 }}
-                                                className={`text-[9px] md:text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors min-w-[16px] md:min-w-[20px] text-center flex items-center ${selectedSizes.includes(size)
-                                                    ? "text-black font-bold"
-                                                    : "text-gray-400 hover:text-black"
-                                                    }`}
-                                            >
-                                                {isMultiSelectMode && <Checkbox checked={selectedSizes.includes(size)} />}
-                                                {size}
-                                            </motion.button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Right Balance Spacer WITH MULTI SELECT TOGGLE */}
-                            <div className="hidden md:flex items-center justify-end w-[200px] order-3">
-                                <button
-                                    onClick={() => setIsMultiSelectMode(!isMultiSelectMode)}
-                                    className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest hover:opacity-50 transition-opacity h-full"
-                                >
-                                    <div className={`w-3 h-3 border border-black flex items-center justify-center ${isMultiSelectMode ? "bg-black" : "bg-white"}`}>
-                                    </div>
-                                    Multi Select
-                                </button>
-                            </div>
                         </div>
                     </motion.div>
                 )}
