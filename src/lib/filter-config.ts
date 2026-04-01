@@ -101,8 +101,6 @@ export const CATEGORY_SUBCATEGORIES: Partial<Record<Category, CategorySubcategor
     ],
     SUNGLASSES: [
         { id: "ALL_SUNGLASSES", label: "All Sunglasses", isDefault: true },
-        { id: "SUNGLASSES_MEN", label: "Men", genders: ["MEN"] },
-        { id: "SUNGLASSES_WOMEN", label: "Women", genders: ["WOMEN"] },
         { id: "SUNGLASSES_UNISEX", label: "Unisex", genders: ["UNISEX"] },
         { id: "SUNGLASSES_KIDS", label: "Kids", genders: ["KIDS"] },
     ],
