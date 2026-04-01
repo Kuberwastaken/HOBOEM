@@ -214,7 +214,7 @@ export default function Header({
         openMobileMenu();
     };
 
-    const toggleCategorySelection = (categories: Category[], category: Category) => {
+    const toggleCategorySelection = (categories: Category[], category: Category): Category[] => {
         if (!isMultiSelectMode) {
             return [category];
         }
@@ -372,7 +372,7 @@ export default function Header({
                                     {isOpen && (
                                         <DesktopSubcategoryMenu
                                             category={category}
-                                            selectedCategory={selectedCategory}
+                                            selectedCategory={category}
                                             selectedGenders={selectedGenders}
                                             selectedSubcategoryId={selectedSubcategoryId}
                                             onSelect={(subcategory) => handleSubcategorySelect(category, subcategory)}
