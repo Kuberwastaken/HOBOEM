@@ -85,14 +85,11 @@ export function BannerCarousel({ bannerImages }: { bannerImages: BannerImageSet 
 
     const safeActiveIndex = activeIndex % bannerCount;
     const currentBanner = banners[safeActiveIndex];
-    const usesTemplateLayout = currentBanner.src.toLowerCase().endsWith(".svg");
-    const stageHeightClass = usesTemplateLayout && isMobileViewport
-        ? "h-[430px] sm:h-[520px] md:h-[440px] lg:h-[500px] xl:h-[540px]"
-        : "h-[300px] sm:h-[360px] md:h-[440px] lg:h-[500px] xl:h-[540px]";
+    const stageHeightClass = "h-[430px] sm:h-[520px] md:h-[440px] lg:h-[500px] xl:h-[540px]";
 
     return (
         <section className="px-1.5 md:px-3 mt-1 md:mt-2">
-            <div className={`group relative overflow-hidden border border-black/10 ${usesTemplateLayout ? "bg-[#e3ddd1]" : "bg-[#d8d3c7]"}`}>
+            <div className={`group relative overflow-hidden border border-black/10 bg-[#e3ddd1]`}>
                 <div className={`relative ${stageHeightClass}`}>
                     <AnimatePresence mode="wait">
                         <motion.div
@@ -108,14 +105,14 @@ export function BannerCarousel({ bannerImages }: { bannerImages: BannerImageSet 
                                 alt={currentBanner.alt}
                                 fill
                                 priority={safeActiveIndex === 0}
-                                className={usesTemplateLayout ? "object-contain p-4 md:p-6" : "object-cover"}
+                                className="object-contain p-4 md:p-6"
                                 sizes="(max-width: 767px) 100vw, (max-width: 1280px) 96vw, 1900px"
                             />
                         </motion.div>
                     </AnimatePresence>
 
-                    <div className={`absolute inset-x-0 top-0 ${usesTemplateLayout ? "h-20 bg-gradient-to-b from-black/8 via-black/[0.03] to-transparent" : "h-24 bg-gradient-to-b from-black/18 via-black/6 to-transparent"}`} />
-                    <div className={`absolute inset-x-0 bottom-0 ${usesTemplateLayout ? "h-24 bg-gradient-to-t from-black/28 via-black/8 to-transparent" : "h-32 bg-gradient-to-t from-black/58 via-black/18 to-transparent"}`} />
+                    <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/8 via-black/[0.03] to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/28 via-black/8 to-transparent" />
 
                     <div className="absolute left-4 top-4 md:left-6 md:top-6 z-10">
                         <div className="inline-flex max-w-[calc(100vw-2rem)] items-center gap-2 overflow-hidden border border-white/20 bg-black/20 px-2.5 py-2 text-[8px] uppercase tracking-[0.3em] text-white/90 backdrop-blur-sm md:max-w-none md:gap-3 md:px-3 md:text-[10px]">

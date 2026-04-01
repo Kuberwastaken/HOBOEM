@@ -32,7 +32,7 @@ const CLIENT_REGIONS = [
 const STATS = [
     { figure: "500+", label: "Retail Partners" },
     { figure: "12", label: "Countries" },
-    { figure: "50K+", label: "Products Delivered" },
+    { figure: "3 Cr+", label: "Products Delivered" },
     { figure: "98%", label: "Retention Rate" },
 ];
 
@@ -151,11 +151,14 @@ export default function ClientsPage() {
 
             {/* Footer */}
             <div className="bg-[#e8e4dc] px-6 md:px-16 py-6 border-t border-black/10">
-                <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.3em] text-black/40">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.3em] text-black/40">
                     <span>HOBOEM © 2026</span>
-                    <div className="flex gap-8">
-                        <Link href="/privacy" className="hover:text-black transition-colors">Privacy</Link>
-                        <Link href="/terms" className="hover:text-black transition-colors">Terms</Link>
+                    <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+                        <Link href="/about" className="hover:text-black transition-colors">About Us</Link>
+                        <Link href="/contact" className="hover:text-black transition-colors">Contact Us</Link>
+                        <Link href="/clients" className="hover:text-black transition-colors">Our Clients</Link>
+                        <Link href="/partners" className="hover:text-black transition-colors">Online Partners</Link>
+                        <Link href="/corporate" className="hover:text-black transition-colors">Corporate Enquiries</Link>
                     </div>
                 </div>
             </div>

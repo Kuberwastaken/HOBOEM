@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
     title: "Online Partners",
@@ -12,42 +13,14 @@ export const metadata: Metadata = {
 };
 
 const PARTNERS = [
-    {
-        name: "Amazon India",
-        type: "Marketplace",
-        url: "https://amazon.in",
-        description: "Full catalogue with Prime delivery across India.",
-    },
-    {
-        name: "Flipkart",
-        type: "Marketplace",
-        url: "https://flipkart.com",
-        description: "Watches and sunglasses with fast delivery.",
-    },
-    {
-        name: "Myntra",
-        type: "Fashion Platform",
-        url: "https://myntra.com",
-        description: "Premium accessories and fashion collections.",
-    },
-    {
-        name: "Meesho",
-        type: "Reseller Platform",
-        url: "https://meesho.com",
-        description: "Wholesale and reseller-friendly pricing.",
-    },
-    {
-        name: "Ajio",
-        type: "Fashion Platform",
-        url: "https://ajio.com",
-        description: "Curated lifestyle and accessories selection.",
-    },
-    {
-        name: "Nykaa Fashion",
-        type: "Fashion Platform",
-        url: "https://nykaafashion.com",
-        description: "Accessories and fashion-forward collections.",
-    },
+    { name: "Amazon", src: "/partners/amazon.jpg" },
+    { name: "Myntra", src: "/partners/myntra.jpg" },
+    { name: "Flipkart", src: "/partners/flipkart.jpg" },
+    { name: "Ajio", src: "/partners/ajio.jpg" },
+    { name: "FirstCry", src: "/partners/firstcry.jpg" },
+    { name: "Hopscotch", src: "/partners/hopscotch.jpg" },
+    { name: "Shoppers Stop", src: "/partners/shoppers-stop.jpg" },
+    { name: "Noon", src: "/partners/noon.jpg" },
 ];
 
 export default function PartnersPage() {
@@ -94,33 +67,27 @@ export default function PartnersPage() {
             </div>
 
             {/* Partners Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2">
-                {PARTNERS.map((partner, index) => (
-                    <a
-                        key={partner.name}
-                        href={partner.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`group p-8 md:p-16 min-h-[40vh] flex flex-col justify-between border-b border-r border-black/8 transition-colors hover:bg-black hover:text-white ${index % 2 === 0 ? "" : "border-r-0"}`}
-                    >
-                        <div className="flex justify-between items-start">
-                            <span className="text-[10px] uppercase tracking-[0.3em] text-black/30 group-hover:text-white/40 transition-colors">
-                                {partner.type}
-                            </span>
-                            <span className="text-2xl text-black/15 group-hover:text-white/40 transition-colors">
-                                ↗
-                            </span>
-                        </div>
-                        <div>
-                            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-4">
+            <div className="border-t border-black/8 w-full overflow-hidden">
+                <div className="grid grid-cols-2 md:grid-cols-4 border-l border-black/8">
+                    {PARTNERS.map((partner) => (
+                        <div
+                            key={partner.name}
+                            className="group flex flex-col items-center justify-center p-8 md:p-16 aspect-square border-r border-b border-black/8 hover:bg-black/5 transition-colors"
+                        >
+                            <div className="relative w-full h-full max-w-[140px] max-h-[80px]">
+                                <Image
+                                    src={partner.src}
+                                    alt={partner.name}
+                                    fill
+                                    className="object-contain mix-blend-multiply opacity-80 group-hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300"
+                                />
+                            </div>
+                            <span className="mt-8 text-[10px] uppercase tracking-[0.3em] text-black/40 group-hover:text-black transition-colors text-center hidden md:block">
                                 {partner.name}
-                            </h2>
-                            <p className="text-black/50 group-hover:text-white/60 transition-colors max-w-sm text-sm leading-relaxed">
-                                {partner.description}
-                            </p>
+                            </span>
                         </div>
-                    </a>
-                ))}
+                    ))}
+                </div>
             </div>
 
             {/* Become a Partner CTA */}
@@ -149,10 +116,12 @@ export default function PartnersPage() {
             <div className="bg-[#f5f5f0] px-6 md:px-16 py-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-[10px] uppercase tracking-[0.3em] text-black/40">
                     <span>HOBOEM © 2026</span>
-                    <div className="flex gap-8">
-                        <Link href="/privacy" className="hover:text-black transition-colors">Privacy</Link>
-                        <Link href="/terms" className="hover:text-black transition-colors">Terms</Link>
-                        <Link href="/" className="hover:text-black transition-colors">Shop</Link>
+                    <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+                        <Link href="/about" className="hover:text-black transition-colors">About Us</Link>
+                        <Link href="/contact" className="hover:text-black transition-colors">Contact Us</Link>
+                        <Link href="/clients" className="hover:text-black transition-colors">Our Clients</Link>
+                        <Link href="/partners" className="hover:text-black transition-colors">Online Partners</Link>
+                        <Link href="/corporate" className="hover:text-black transition-colors">Corporate Enquiries</Link>
                     </div>
                 </div>
             </div>

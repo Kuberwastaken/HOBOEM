@@ -40,7 +40,7 @@ export default function PrivacyPage() {
                         Index
                     </div>
                     <nav className="space-y-4">
-                        {["Collection", "Usage", "Cookies", "Rights"].map((item, i) => (
+                        {["Collection", "Usage", "Protection & Sharing", "Cookies", "Your Rights"].map((item, i) => (
                             <div key={item} className="group flex items-baseline gap-4">
                                 <span className="text-[10px] text-black/30 font-mono">0{i + 1}</span>
                                 <span className="text-sm uppercase tracking-widest text-black/70 group-hover:text-black transition-colors cursor-pointer">
@@ -63,10 +63,10 @@ export default function PrivacyPage() {
                             </div>
                             <div className="pl-0 md:pl-24 space-y-6 text-black/60 leading-relaxed">
                                 <p>
-                                    HOBOEM collects minimal information necessary to process orders and improve your shopping experience.
+                                    We may collect your name, phone number, email address, business details, shipping address, and payment-related information (processed via secure third-party gateways).
                                 </p>
                                 <p>
-                                    We do not sell or share your personal information with third parties.
+                                    HOBOEM collects only the information necessary to conduct business operations efficiently. We do not sell, rent, or share personal information with third parties for commercial purposes.
                                 </p>
                             </div>
                         </section>
@@ -80,10 +80,10 @@ export default function PrivacyPage() {
                             </div>
                             <div className="pl-0 md:pl-24 space-y-6 text-black/60 leading-relaxed">
                                 <p>
-                                    Your data is used solely for order fulfillment, customer service, and internal analytics.
+                                    Collected data is used strictly for order processing and communication, customer support, and improving our services and offerings.
                                 </p>
                                 <p>
-                                    We employ industry-standard security measures to protect your information.
+                                    By using our platform, you consent to the collection and use of your information as outlined in this policy.
                                 </p>
                             </div>
                         </section>
@@ -92,15 +92,16 @@ export default function PrivacyPage() {
                             <div className="flex items-baseline gap-6 mb-8">
                                 <span className="text-6xl md:text-8xl font-black text-black/10">03</span>
                                 <h2 className="text-xl md:text-2xl font-bold uppercase tracking-widest">
-                                    Cookies
+                                    Protection & Sharing
                                 </h2>
                             </div>
                             <div className="pl-0 md:pl-24 space-y-6 text-black/60 leading-relaxed">
                                 <p>
-                                    We use essential cookies to maintain your shopping cart and preferences.
+                                    We implement appropriate security measures to safeguard your data against unauthorized access or disclosure.
                                 </p>
                                 <p>
-                                    No tracking or advertising cookies are used on this site.
+                                    Information may be shared with logistics partners, payment gateways, and service providers strictly for order fulfillment purposes.
+                                    Appropriate technical and organizational measures are implemented to safeguard all information.
                                 </p>
                             </div>
                         </section>
@@ -109,16 +110,33 @@ export default function PrivacyPage() {
                             <div className="flex items-baseline gap-6 mb-8">
                                 <span className="text-6xl md:text-8xl font-black text-black/10">04</span>
                                 <h2 className="text-xl md:text-2xl font-bold uppercase tracking-widest">
+                                    Cookies
+                                </h2>
+                            </div>
+                            <div className="pl-0 md:pl-24 space-y-6 text-black/60 leading-relaxed">
+                                <p>
+                                    HOBOEM uses essential cookies solely to ensure proper website functionality, including session management and cart operations.
+                                </p>
+                                <p>
+                                    No tracking, profiling, or advertising cookies are used.
+                                </p>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div className="flex items-baseline gap-6 mb-8">
+                                <span className="text-6xl md:text-8xl font-black text-black/10">05</span>
+                                <h2 className="text-xl md:text-2xl font-bold uppercase tracking-widest">
                                     Your Rights
                                 </h2>
                             </div>
                             <div className="pl-0 md:pl-24 space-y-6 text-black/60 leading-relaxed">
                                 <p>
-                                    You have the right to access, modify, or delete your personal data at any time.
+                                    You have the right to access, update, or request deletion of your personal data, subject to applicable laws.
                                 </p>
                                 <div className="pt-6 border-t border-black/10">
-                                    <p className="text-[10px] uppercase tracking-[0.3em] text-black/40 mb-2">Contact</p>
-                                    <p className="text-black">privacy@hoboem.com</p>
+                                    <p className="text-[10px] uppercase tracking-[0.3em] text-black/40 mb-2">Subject Access Request or Queries</p>
+                                    <p className="text-black">sales@houseofbrands.in</p>
                                 </div>
                             </div>
                         </section>

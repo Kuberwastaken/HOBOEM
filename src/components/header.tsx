@@ -294,6 +294,7 @@ export default function Header({
                                         { label: "Contact Us",       href: "/contact" },
                                         { label: "Our Clients",      href: "/clients" },
                                         { label: "Online Partners",  href: "/partners" },
+                                        { label: "Corporate Enquiries", href: "/corporate" },
                                     ] as const).map((item) => (
                                         <Link
                                             key={item.href}

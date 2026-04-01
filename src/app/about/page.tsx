@@ -45,10 +45,12 @@ export default function AboutPage() {
 
                 {/* Right - Intro */}
                 <div className="flex flex-col justify-end p-6 md:p-16 pb-12 md:pb-20 bg-black/5">
-                    <div className="max-w-md">
+                    <div className="max-w-[45rem]">
+                        <p className="text-lg md:text-xl leading-relaxed text-black/80 mb-6">
+                            In partnership with Myntra, HOBOEM by House of Brands is a B2B OEM and wholesale platform enabling businesses to build and scale their own brands with efficiency and reliability. With offices in India, Dubai, and the UK, and manufacturing capabilities across Gujarat, Himachal Pradesh, Guangzhou, and Shenzhen, we offer a strong global supply and production network.
+                        </p>
                         <p className="text-lg md:text-xl leading-relaxed text-black/80">
-                            HOBOEM is a premium fashion and accessories brand dedicated to delivering exceptional quality
-                            and timeless design.
+                            Our model combines ready stock availability with low MOQ customization, allowing clients to personalize products with their own branding, packaging, and identity. Backed by proven manufacturing expertise and large-scale delivery experience, we provide an integrated solution from sourcing to brand creation under one roof.
                         </p>
                         <div className="mt-8 pt-8 border-t border-black/10">
                             <p className="text-[10px] uppercase tracking-[0.3em] text-black/40">
@@ -70,11 +72,12 @@ export default function AboutPage() {
                         </div>
                         <div className="md:col-span-2">
                             <blockquote className="text-3xl md:text-5xl font-light leading-tight">
-                                "We believe in minimalism, functionality, and craftsmanship."
+                                "We believe that building a brand should be accessible, efficient, and scalable."
                             </blockquote>
-                            <p className="mt-8 text-white/60 leading-relaxed max-w-lg">
-                                Every product is selected with care to ensure it meets our exacting standards
-                                for quality and aesthetic appeal.
+                            <p className="mt-8 text-white/60 leading-relaxed max-w-2xl">
+                                Our approach is rooted in simplifying complexities—bridging the gap between manufacturing and market-ready products through streamlined processes and low MOQ solutions.
+                                <br/><br/>
+                                We focus on delivering consistency, speed, and quality while enabling our partners to create distinct brand identities with ease. By combining global sourcing capabilities with practical business solutions, our philosophy is to empower entrepreneurs and businesses to grow confidently, without operational barriers.
                             </p>
                         </div>
                     </div>
@@ -93,9 +96,7 @@ export default function AboutPage() {
                             Quality Commitment
                         </h3>
                         <p className="text-black/60 leading-relaxed max-w-md">
-                            Each item in our collection undergoes rigorous quality control.
-                            We work directly with manufacturers to ensure authenticity and durability,
-                            providing you with products that stand the test of time.
+                            At HOBOEM by House of Brands, we ensure consistent quality through strict checks at every stage—from sourcing to final production. Our standardized processes and reliable manufacturing network enable us to deliver durable, well-finished products, along with precise customization, so our partners can build their brands with confidence.
                         </p>
                     </div>
                 </div>
@@ -110,10 +111,71 @@ export default function AboutPage() {
                             Customer First
                         </h3>
                         <p className="text-black/60 leading-relaxed max-w-md">
-                            Your satisfaction is our priority. We offer transparent pricing,
-                            detailed product information, and responsive customer service
-                            to make your shopping experience seamless.
+                            At HOBOEM by House of Brands, our customers are at the center of every decision. We focus on understanding business needs, offering flexible solutions, and ensuring seamless execution—from product selection to customization and delivery—so our partners can grow with confidence and ease.
                         </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Why HOBOEM / Target Audience */}
+            <div className="bg-black text-white py-20 md:py-32 px-6 md:px-16">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+                    {/* Why Us */}
+                    <div>
+                        <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-wide mb-10 pb-6 border-b border-white/20">
+                            Why HOBOEM
+                        </h3>
+                        <ul className="space-y-6 text-lg text-white/80">
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">01</span>
+                                <span>3 Cr+ products delivered</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">02</span>
+                                <span>Trusted by leading brands</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">03</span>
+                                <span>In-house sourcing + manufacturing</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">04</span>
+                                <span>Low MOQ entry barrier</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">05</span>
+                                <span>Fast turnaround</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Target Audience */}
+                    <div>
+                        <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-wide mb-10 pb-6 border-b border-white/20">
+                            Built For
+                        </h3>
+                        <ul className="space-y-6 text-lg text-white/80">
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">→</span>
+                                <span>Instagram sellers</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">→</span>
+                                <span>Amazon & Flipkart sellers</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">→</span>
+                                <span>Retail shop owners</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">→</span>
+                                <span>Corporate gifting buyers</span>
+                            </li>
+                            <li className="flex items-start gap-4">
+                                <span className="text-white/40 mt-1">→</span>
+                                <span>Influencers launching brands</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -150,11 +212,14 @@ export default function AboutPage() {
 
             {/* Footer */}
             <div className="bg-[#e8e4dc] px-6 md:px-16 py-6 border-t border-black/10">
-                <div className="flex justify-between items-center text-[10px] uppercase tracking-[0.3em] text-black/40">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-[0.3em] text-black/40">
                     <span>HOBOEM © 2026</span>
-                    <div className="flex gap-8">
-                        <Link href="/privacy" className="hover:text-black transition-colors">Privacy</Link>
-                        <Link href="/terms" className="hover:text-black transition-colors">Terms</Link>
+                    <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+                        <Link href="/about" className="hover:text-black transition-colors">About Us</Link>
+                        <Link href="/contact" className="hover:text-black transition-colors">Contact Us</Link>
+                        <Link href="/clients" className="hover:text-black transition-colors">Our Clients</Link>
+                        <Link href="/partners" className="hover:text-black transition-colors">Online Partners</Link>
+                        <Link href="/corporate" className="hover:text-black transition-colors">Corporate Enquiries</Link>
                     </div>
                 </div>
             </div>

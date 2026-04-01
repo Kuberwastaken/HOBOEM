@@ -15,41 +15,80 @@ export default function TermsPage() {
     const sections = [
         {
             number: "01",
-            title: "Agreement",
+            title: "TOS: Agreement",
             content: [
-                "By accessing and using HOBOEM, you agree to be bound by these terms of service.",
-                "If you disagree with any part of these terms, please do not use our services."
+                "By accessing or using HOBOEM, you agree to be bound by these Terms of Service and applicable laws of India.",
+                "If you do not agree with these terms, please refrain from using our services."
             ]
         },
         {
             number: "02",
-            title: "Orders & Payment",
+            title: "TOS: Orders & Payment",
             content: [
-                "All orders are subject to availability and confirmation. We reserve the right to refuse or cancel any order.",
-                "Payment must be received in full before order processing begins."
+                "All orders are subject to availability and confirmation.",
+                "• HOBOEM reserves the right to accept or reject any order.",
+                "• Full advance payment is mandatory before processing any order.",
+                "• Orders involving customization will be processed only after final approval from the customer."
             ]
         },
         {
             number: "03",
-            title: "Returns & Refunds",
+            title: "TOS: Returns & Refunds",
             content: [
-                "Items may be returned within 14 days of receipt in original condition.",
-                "Refunds will be processed within 7-10 business days of receiving the return."
+                "• No returns or refunds are accepted under any circumstances.",
+                "• As all orders are either bulk, customized, or made-to-order, they are non-returnable and non-refundable.",
+                "• In case of manufacturing defects, resolution will be provided at the sole discretion of HOBOEM."
             ]
         },
         {
             number: "04",
-            title: "Intellectual Property",
+            title: "TOS: Intellectual Property",
             content: [
-                "All content, designs, and branding on HOBOEM are protected by copyright and trademark laws.",
-                "Unauthorized use is strictly prohibited."
+                "All content, designs, product formats, and branding displayed on HOBOEM are the intellectual property of the company.",
+                "Unauthorized use, copying, or reproduction is strictly prohibited under applicable laws."
             ]
         },
         {
             number: "05",
-            title: "Limitation of Liability",
+            title: "TOS: Limitation of Liability",
             content: [
-                "HOBOEM shall not be liable for any indirect, incidental, or consequential damages arising from the use of our products or services."
+                "HOBOEM shall not be liable for any indirect, incidental, or consequential damages arising from the use of its products or services.",
+                "Total liability, if any, shall not exceed the value of the order."
+            ]
+        },
+        {
+            number: "06",
+            title: "Shipping: Order Processing",
+            content: [
+                "• Orders are processed only after full payment confirmation.",
+                "• Customized orders may require additional production time."
+            ]
+        },
+        {
+            number: "07",
+            title: "Shipping: Delivery Timeline",
+            content: [
+                "• Standard delivery timelines range between 5–15 business days, depending on product type and customization.",
+                "• Bulk or OEM orders may require extended timelines."
+            ]
+        },
+        {
+            number: "08",
+            title: "Shipping: Charges & Delays",
+            content: [
+                "• Shipping costs are calculated based on order size, weight, and delivery location.",
+                "• Charges will be communicated at the time of order confirmation.",
+                "HOBOEM is not responsible for delays caused by logistics partners, natural events or unforeseen circumstances, or regulatory/transportation disruptions."
+            ]
+        },
+        {
+            number: "09",
+            title: "Cancellation: Policy",
+            content: [
+                "• Orders once placed and confirmed cannot be cancelled.",
+                "• No cancellations are allowed for customized or processed orders.",
+                "Any cancellation request, if considered, will be at the sole discretion of HOBOEM and may be subject to deductions or rejection.",
+                "• No refunds will be issued for cancelled orders."
             ]
         }
     ];

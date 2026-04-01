@@ -68,10 +68,10 @@ export default function ContactPage() {
                                     Email
                                 </p>
                                 <a
-                                    href="mailto:support@hoboem.com"
-                                    className="text-2xl md:text-3xl font-bold hover:opacity-60 transition-opacity block"
+                                    href="mailto:sales@houseofbrands.in"
+                                    className="text-2xl md:text-[min(1.5rem,3.5vw)] font-bold hover:opacity-60 transition-opacity block truncate"
                                 >
-                                    support@hoboem.com
+                                    sales@houseofbrands.in
                                 </a>
                             </div>
 
@@ -112,49 +112,43 @@ export default function ContactPage() {
                         <div className="space-y-8">
                             <div className="group pb-6 border-b border-white/10">
                                 <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-2">
-                                    Order Inquiries
+                                    Instagram
                                 </p>
                                 <a
-                                    href="mailto:orders@hoboem.com"
+                                    href="https://www.instagram.com/houseofbrandofficial"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-lg group-hover:opacity-60 transition-opacity"
                                 >
-                                    orders@hoboem.com
+                                    @houseofbrandofficial
                                 </a>
                             </div>
 
                             <div className="group pb-6 border-b border-white/10">
                                 <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-2">
-                                    Wholesale
+                                    YouTube
                                 </p>
                                 <a
-                                    href="mailto:wholesale@hoboem.com"
+                                    href="https://www.youtube.com/@houseofbrandofficial"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-lg group-hover:opacity-60 transition-opacity"
                                 >
-                                    wholesale@hoboem.com
+                                    @houseofbrandofficial
                                 </a>
                             </div>
 
                             <div className="group pb-6 border-b border-white/10">
                                 <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-2">
-                                    Partnerships
+                                    Facebook
                                 </p>
                                 <a
-                                    href="mailto:collaborations@hoboem.com"
+                                    href="https://www.facebook.com/houseofbrandofficial"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-lg group-hover:opacity-60 transition-opacity"
                                 >
-                                    collaborations@hoboem.com
-                                </a>
-                            </div>
-
-                            <div className="group pb-6 border-b border-white/10">
-                                <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-2">
-                                    Press
-                                </p>
-                                <a
-                                    href="mailto:press@hoboem.com"
-                                    className="text-lg group-hover:opacity-60 transition-opacity"
-                                >
-                                    press@hoboem.com
+                                    House of Brands Official
                                 </a>
                             </div>
                         </div>
@@ -178,10 +172,12 @@ export default function ContactPage() {
             <div className="bg-[#f5f5f0] px-6 md:px-16 py-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-[10px] uppercase tracking-[0.3em] text-black/40">
                     <span>HOBOEM © 2026</span>
-                    <div className="flex gap-8">
-                        <Link href="/privacy" className="hover:text-black transition-colors">Privacy</Link>
-                        <Link href="/terms" className="hover:text-black transition-colors">Terms</Link>
-                        <Link href="/" className="hover:text-black transition-colors">Shop</Link>
+                    <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8">
+                        <Link href="/about" className="hover:text-black transition-colors">About Us</Link>
+                        <Link href="/contact" className="hover:text-black transition-colors">Contact Us</Link>
+                        <Link href="/clients" className="hover:text-black transition-colors">Our Clients</Link>
+                        <Link href="/partners" className="hover:text-black transition-colors">Online Partners</Link>
+                        <Link href="/corporate" className="hover:text-black transition-colors">Corporate Enquiries</Link>
                     </div>
                 </div>
             </div>
