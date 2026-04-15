@@ -45,7 +45,8 @@ legacy/newer-stuff-extracted/Men Watches Images.zip
 legacy/newer-stuff-extracted/Women Watch Images.zip
 
 # generated product images (run `npm run generate-products` to rebuild locally)
-/public/products/
+# NOTE: public/products/ IS committed — it's what the deployed site serves.
+# new-products/ is the source; keep it local only.
 
 # source product assets — large binaries, kept local only
 /new-products/
