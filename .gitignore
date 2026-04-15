@@ -44,8 +44,13 @@ next-env.d.ts
 legacy/newer-stuff-extracted/Men Watches Images.zip
 legacy/newer-stuff-extracted/Women Watch Images.zip
 
-# MS Office temporary lock files 
-~$*
-*.xlsx
-*.xls
-*.csv
+# generated product images (run `npm run generate-products` to rebuild locally)
+/public/products/
+
+# source product assets — large binaries, kept local only
+/new-products/
+/legacy/products-assets/
+/legacy/products-csv-legacy2/
+/legacy/products-excel/
+/legacy/old-watch-assets/
+/legacy/legacy-products-assets/

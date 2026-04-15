@@ -1,20 +1,14 @@
 /**
- * Product Generation Script v6 (wrapper)
- *
- * This now delegates to import-new-products.js which handles:
- *   - Reading Excel files from new-products/
- *   - Generating CSVs to products-csv/
- *   - Copying images to public/products/
- *   - Generating src/lib/products.ts
- *
+ * Product Generation Script v5
+ * 
+ * Each folder in products-assets = ONE product
+ * Each image in that folder = a variant of that product
+ * 
+ * CSV provides metadata (price, description) keyed by imageSku (folder name)
+ * 
  * Usage: node scripts/generate-products.js
- * Or:    npm run generate-products
+ * Or: npm run generate-products
  */
-
-require('./import-new-products');
-
-// Legacy v5 script moved to legacy/generate-products-v5.js
-return;
 
 const fs = require('fs');
 const path = require('path');

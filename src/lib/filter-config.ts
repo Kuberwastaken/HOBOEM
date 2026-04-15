@@ -5,8 +5,7 @@ export type Category =
     | "WATCHES"
     | "SUNGLASSES"
     | "LEATHER"
-    | "LINGERIE"
-    | "GIFT_SET";
+    | "LINGERIE";
 
 export type Gender = "MEN" | "WOMEN" | "UNISEX" | "KIDS";
 
@@ -20,7 +19,6 @@ export const CATEGORIES: Category[] = [
     "SUNGLASSES",
     "LEATHER",
     "LINGERIE",
-    "GIFT_SET",
 ];
 
 export const CATEGORY_DISPLAY_NAMES: Record<Category, string> = {
@@ -29,7 +27,6 @@ export const CATEGORY_DISPLAY_NAMES: Record<Category, string> = {
     SUNGLASSES: "Sunglasses",
     LEATHER: "Leather",
     LINGERIE: "Lingerie",
-    GIFT_SET: "Gift Set",
 };
 
 export const PRODUCT_SORT_DISPLAY_NAMES: Record<ProductSort, string> = {
@@ -79,16 +76,13 @@ export const CATEGORY_FILTER_CONFIG: Record<Category, CategoryFilterConfig> = {
         hasSize: false,
     },
     LEATHER: {
-        hasGender: false,
+        hasGender: true,
         hasSize: false,
+        availableGenders: ["MEN", "WOMEN", "UNISEX"],
     },
     LINGERIE: {
         hasGender: false,
-        hasSize: false,
-    },
-    GIFT_SET: {
-        hasGender: false,
-        hasSize: false,
+        hasSize: true,
     },
 };
 

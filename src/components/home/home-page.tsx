@@ -51,7 +51,6 @@ function createAllViewOrder(products: Product[]): Product[] {
         { category: "LEATHER" as Category, gender: undefined },
         { category: "WATCHES" as Category, gender: "KIDS" as Gender },
         { category: "LINGERIE" as Category, gender: undefined },
-        { category: "GIFT_SET" as Category, gender: undefined },
     ];
 
     const groupSize = 6;
@@ -124,6 +123,7 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImageSet | Bann
             selectedCategories,
             selectedGenders,
             selectedSizes,
+            selectedSubcategoryId,
         );
 
         const isAllView = selectedCategories.includes("ALL") || selectedCategories.length === 0;
@@ -134,7 +134,7 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImageSet | Bann
         }
 
         return sortProducts(filtered, sortOrder);
-    }, [selectedCategories, selectedGenders, selectedSizes, sortOrder]);
+    }, [selectedCategories, selectedGenders, selectedSizes, selectedSubcategoryId, sortOrder]);
 
     const totalCategoryCount = useMemo(() => {
         return filterProducts(
