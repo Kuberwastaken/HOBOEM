@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Share_Tech_Mono, DM_Sans } from "next/font/google";
+import { withBasePath } from "@/lib/asset-path";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
     description: "Discover HOBOEM's curated collection of premium watches, belts, sunglasses, and lingerie. Quality craftsmanship meets timeless design.",
     images: [
       {
-        url: "/favicon.png",
+        url: withBasePath("/favicon.png"),
         width: 512,
         height: 512,
         alt: "HOBOEM Logo",
@@ -72,7 +73,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "HOBOEM - Premium Fashion & Accessories",
     description: "Discover HOBOEM's curated collection of premium watches, belts, sunglasses, and lingerie.",
-    images: ["/favicon.png"],
+    images: [withBasePath("/favicon.png")],
     creator: "@hoboem",
   },
   robots: {
@@ -88,10 +89,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.png", type: "image/png" },
+      { url: withBasePath("/favicon.png"), type: "image/png" },
     ],
     apple: [
-      { url: "/favicon.png", type: "image/png" },
+      { url: withBasePath("/favicon.png"), type: "image/png" },
     ],
   },
   verification: {
