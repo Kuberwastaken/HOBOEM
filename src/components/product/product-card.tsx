@@ -6,12 +6,13 @@ import { thumbUrl } from "@/lib/cdn";
 
 interface ProductCardProps {
     product: Product;
+    priority?: boolean;
 }
 
 // Simple blur placeholder - a tiny gray square
 const blurDataURL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAj/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEEoAAAAAA//Z";
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, priority }: ProductCardProps) {
     return (
         <div className="group relative flex flex-col cursor-pointer select-none active:scale-[0.98] transition-transform duration-300 hover:scale-[1.05]">
             {/* Product Image Container */}
@@ -21,6 +22,7 @@ export function ProductCard({ product }: ProductCardProps) {
                         src={thumbUrl(product.variants[0]?.image || '')}
                         alt={product.name}
                         fill
+                        priority={priority}
                         className="object-contain p-1"
                         sizes="(max-width: 768px) 33vw, (max-width: 1200px) 16vw, 16vw"
                         placeholder="blur"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/product/product-card";
 import { ProductModal } from "@/components/product/product-modal";
 import { BannerCarousel } from "@/components/home/banner-carousel";
 import { PRODUCTS, Product, filterProducts, flattenProducts } from "@/lib/products";
+import { fullUrl, thumbUrl } from "@/lib/cdn";
 import {
     Category,
     Gender,
@@ -92,6 +93,118 @@ function getProductPrice(product: Product) {
     return product.price ?? product.variants.find((variant) => variant.price !== undefined)?.price ?? Number.POSITIVE_INFINITY;
 }
 
+// Prefetch thumbnails for cards ~2 rows ahead of the viewport as the user scrolls.
+// Uses a large rootMargin so the observer fires before the element is visible.
+function useScrollAheadPrefetch(products: Product[]) {
+    const prefetchedRef = useRef(new Set<string>());
+    const productMap = useMemo(() => {
+        const map = new Map<string, Product>();
+        for (const p of products) map.set(p.id, p);
+        return map;
+    }, [products]);
+
+    useEffect(() => {
+        if (products.length === 0) return;
+
+        const setupTimer = setTimeout(() => {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    for (const entry of entries) {
+                        if (!entry.isIntersecting) continue;
+                        const id = (entry.target as HTMLElement).dataset.productId;
+                        if (!id || prefetchedRef.current.has(id)) continue;
+                        const product = productMap.get(id);
+                        if (!product) continue;
+                        const url = thumbUrl(product.variants[0]?.image ?? "");
+                        if (!url) continue;
+                        const link = document.createElement("link");
+                        link.rel = "prefetch";
+                        link.as = "image";
+                        link.href = url;
+                        document.head.appendChild(link);
+                        prefetchedRef.current.add(id);
+                    }
+                },
+                // Fire ~800px before the element enters the viewport (roughly 2 rows)
+                { rootMargin: "0px 0px 800px 0px", threshold: 0 }
+            );
+            document.querySelectorAll("[data-product-id]").forEach(el => observer.observe(el));
+            return () => observer.disconnect();
+        }, 350);
+
+        return () => clearTimeout(setupTimer);
+    }, [products, productMap]);
+}
+
+// After 2.5s of user inactivity, prefetch the full-size jsDelivr images
+// for whichever product cards are currently visible in the viewport.
+function useIdleFullSizePrefetch(products: Product[]) {    const prefetchedRef = useRef(new Set<string>());
+    const productMap = useMemo(() => {
+        const map = new Map<string, Product>();
+        for (const p of products) map.set(p.id, p);
+        return map;
+    }, [products]);
+
+    useEffect(() => {
+        if (products.length === 0) return;
+
+        const visible = new Set<string>();
+        let timer: ReturnType<typeof setTimeout> | null = null;
+        let observer: IntersectionObserver | null = null;
+
+        function prefetchNow() {
+            for (const id of visible) {
+                if (prefetchedRef.current.has(id)) continue;
+                const product = productMap.get(id);
+                if (!product) continue;
+                for (const variant of product.variants) {
+                    const url = fullUrl(variant.image);
+                    if (!url) continue;
+                    const link = document.createElement("link");
+                    link.rel = "prefetch";
+                    link.as = "image";
+                    link.href = url;
+                    document.head.appendChild(link);
+                }
+                prefetchedRef.current.add(id);
+            }
+        }
+
+        function schedule() {
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(prefetchNow, 2500);
+        }
+
+        // Short delay so filter-change animations settle before we observe
+        const setupTimer = setTimeout(() => {
+            observer = new IntersectionObserver(
+                (entries) => {
+                    for (const entry of entries) {
+                        const id = (entry.target as HTMLElement).dataset.productId;
+                        if (!id) continue;
+                        if (entry.isIntersecting) visible.add(id);
+                        else visible.delete(id);
+                    }
+                    schedule();
+                },
+                { threshold: 0.1 }
+            );
+            document.querySelectorAll("[data-product-id]").forEach(el => observer!.observe(el));
+            window.addEventListener("scroll", schedule, { passive: true });
+            window.addEventListener("touchmove", schedule, { passive: true });
+            schedule();
+        }, 350);
+
+        return () => {
+            clearTimeout(setupTimer);
+            if (timer) clearTimeout(timer);
+            observer?.disconnect();
+            window.removeEventListener("scroll", schedule);
+            window.removeEventListener("touchmove", schedule);
+        };
+    }, [products, productMap]);
+}
+
 function sortProducts(products: Product[], sortOrder: ProductSort) {
     if (sortOrder === "FEATURED") {
         return products;
@@ -150,6 +263,10 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImageSet | Bann
     };
 
     const filterKey = `${selectedCategories.join(",")}-${selectedGenders.join(",") || "all"}-${selectedSizes.join(",") || "all"}-${selectedSubcategoryId || "none"}-${sortOrder}`;
+
+    useIdleFullSizePrefetch(filteredProducts);
+    useScrollAheadPrefetch(filteredProducts);
+
     const singleCategorySelection = selectedCategories.length === 1 && selectedCategories[0] !== "ALL"
         ? selectedCategories[0]
         : null;
@@ -232,6 +349,7 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImageSet | Bann
                                 {filteredProducts.map((product, index) => (
                                     <motion.div
                                         key={product.id}
+                                        data-product-id={product.id}
                                         layout="position"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -248,7 +366,7 @@ export function HomePage({ bannerImages }: { bannerImages: BannerImageSet | Bann
                                         onClick={() => setSelectedProduct(product)}
                                         className="cursor-pointer"
                                     >
-                                        <ProductCard product={product} />
+                                        <ProductCard product={product} priority={index < 18} />
                                     </motion.div>
                                 ))}
                             </motion.div>
