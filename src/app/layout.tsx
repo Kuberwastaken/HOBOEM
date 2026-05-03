@@ -121,6 +121,13 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DP3T77L8HC" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DP3T77L8HC');`,
+          }}
+        />
       </head>
       <body
         className={`${ibmPlexMono.variable} ${shareTechMono.variable} ${dmSans.variable} font-mono antialiased bg-white text-black`}

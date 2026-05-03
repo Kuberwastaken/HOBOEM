@@ -2,6 +2,7 @@
 
 import { useEffect, useEffectEvent, useState } from "react";
 import Image from "next/image";
+import { fullUrl } from "@/lib/cdn";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -101,7 +102,7 @@ export function BannerCarousel({ bannerImages }: { bannerImages: BannerImageSet 
                             className="absolute inset-0"
                         >
                             <Image
-                                src={currentBanner.src}
+                                src={fullUrl(currentBanner.src)}
                                 alt={currentBanner.alt}
                                 fill
                                 priority={safeActiveIndex === 0}

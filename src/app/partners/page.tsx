@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { fullUrl } from "@/lib/cdn";
 
 export const metadata: Metadata = {
     title: "Online Partners",
@@ -76,7 +77,7 @@ export default function PartnersPage() {
                         >
                             <div className="relative w-full h-full max-w-[140px] max-h-[80px]">
                                 <Image
-                                    src={partner.src}
+                                    src={fullUrl(partner.src)}
                                     alt={partner.name}
                                     fill
                                     className="object-contain mix-blend-multiply opacity-80 group-hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-300"

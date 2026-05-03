@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next'
+import { PRODUCTS } from '@/lib/products'
 
 export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://hoboem.com'
 
-    return [
+    const staticRoutes: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
             lastModified: new Date(),
@@ -54,5 +55,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'yearly',
             priority: 0.3,
         },
+        {
+            url: `${baseUrl}/partners`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.5,
+        },
     ]
+
+    const productRoutes: MetadataRoute.Sitemap = PRODUCTS.map((product) => ({
+        url: `${baseUrl}/products/${product.id}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+    }))
+
+    return [...staticRoutes, ...productRoutes]
 }

@@ -37,6 +37,9 @@ jobs:
       - name: Generate image thumbnails
         run: node scripts/generate-thumbs.js
 
+      - name: Generate llms.txt
+        run: node scripts/generate-llms-txt.js
+
       - name: Build (next export)
         run: npm run build
 
