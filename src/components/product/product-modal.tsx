@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { fullUrl } from "@/lib/cdn";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/products";
 import { useCart } from "@/context/cart-context";
@@ -154,7 +155,7 @@ export function ProductModal({ product, onClose }: ProductModalProps) {
                                 className="absolute inset-0"
                             >
                                 <Image
-                                    src={images[currentImageIndex]}
+                                    src={fullUrl(images[currentImageIndex])}
                                     alt={`${product.name} - Image ${currentImageIndex + 1}`}
                                     fill
                                     className="object-contain"

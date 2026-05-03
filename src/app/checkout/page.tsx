@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { thumbUrl } from "@/lib/cdn";
 import { Upload, X, Trash2, ArrowUpRight, MessageCircle, Download } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import {
@@ -218,7 +219,7 @@ Restore cart: ${cartLink}`;
                                 return (
                                     <motion.div key={key} layout className="bg-white p-4 flex gap-4">
                                         <div className="relative w-16 h-16 bg-[#f5f5f0] flex-shrink-0">
-                                            <Image src={item.variants[0]?.image || ''} alt={item.name} fill className="object-contain p-1" sizes="64px" />
+                                            <Image src={thumbUrl(item.variants[0]?.image || '')} alt={item.name} fill className="object-contain p-1" sizes="64px" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between gap-2">
@@ -318,7 +319,7 @@ Restore cart: ${cartLink}`;
                                         return (
                                             <div key={key} className="flex gap-4 items-start">
                                                 <div className="relative w-14 h-14 md:w-16 md:h-16 bg-[#f5f5f0] flex-shrink-0 border border-black/10">
-                                                    <Image src={item.variants[0]?.image || ''} alt={item.name} fill className="object-contain p-1" sizes="64px" />
+                                                    <Image src={thumbUrl(item.variants[0]?.image || '')} alt={item.name} fill className="object-contain p-1" sizes="64px" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex justify-between items-start">

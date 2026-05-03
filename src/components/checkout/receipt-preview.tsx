@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useEffect, useState } from "react";
 import Image from "next/image";
+import { thumbUrl } from "@/lib/cdn";
 import { Plus, Minus, X } from "lucide-react";
 import { generateReceiptId, generateQRCode } from "@/lib/receipt-generator";
 import { useCart } from "@/context/cart-context";
@@ -111,7 +112,7 @@ export const ReceiptPreview = forwardRef<HTMLDivElement, ReceiptPreviewProps>(
                                 {/* Thumbnail */}
                                 <div className="relative w-10 h-10 md:w-12 md:h-12 bg-gray-50 flex-shrink-0">
                                     <Image
-                                        src={item.variants[0]?.image || ''}
+                                        src={thumbUrl(item.variants[0]?.image || '')}
                                         alt={item.name}
                                         fill
                                         className="object-contain p-1"
